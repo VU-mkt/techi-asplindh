@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gartner — IDV Workforce 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Epilogue:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #F5F2EC;
+  --ink: #1A1814;
+  --ink2: #3D3A34;
+  --muted: #8A8680;
+  --border: #D8D4CC;
+  --white: #FFFFFF;
+  --red: #C8321A;
+  --red-light: #F9EDE9;
+  --green: #1A6B45;
+  --green-light: #E6F2EC;
+  --amber: #B07D1A;
+  --amber-light: #FBF3E2;
+  --blue: #1A3D6B;
+  --blue-light: #E6ECF5;
+  --accent: #C8321A;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Epilogue', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+/* ---- NAV ---- */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  background: var(--ink);
+  display: flex;
+  align-items: center;
+  padding: 0 2rem;
+  height: 50px;
+  gap: 0;
+}
+.nav-brand {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  letter-spacing: 0.08em;
+  color: #F5F2EC;
+  margin-right: 1.5rem;
+  flex-shrink: 0;
+}
+.nav-brand span { color: var(--red); }
+.nav-divider { width: 1px; height: 18px; background: rgba(255,255,255,0.2); margin-right: 1.5rem; flex-shrink: 0; }
+.nav-subtitle { font-size: 11px; color: rgba(245,242,236,0.5); letter-spacing: 0.06em; text-transform: uppercase; flex: 1; }
+.nav-tabs { display: flex; gap: 0; }
+.nav-tab {
+  padding: 0 1rem;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgba(245,242,236,0.45);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  border-top: none; border-left: none; border-right: none;
+  background: none;
+  font-family: 'Epilogue', sans-serif;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.nav-tab:hover { color: rgba(245,242,236,0.8); }
+.nav-tab.active { color: #F5F2EC; border-bottom-color: var(--red); }
+
+/* ---- SECTIONS ---- */
+.section { display: none; min-height: 100vh; padding: 70px 0 4rem; }
+.section.active { display: block; }
+.inner { max-width: 1060px; margin: 0 auto; padding: 0 2rem; }
+
+/* ---- HERO ---- */
+.hero { padding: 3rem 0 2rem; }
+.hero-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.hero-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3rem, 7vw, 5.5rem);
+  line-height: 0.95;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  margin-bottom: 1.5rem;
+}
+.hero-title em { color: var(--red); font-style: normal; }
+.hero-deck {
+  font-size: 15px;
+  color: var(--ink2);
+  line-height: 1.7;
+  max-width: 600px;
+  margin-bottom: 2.5rem;
+}
+
+.kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 3rem;
+}
+.kpi {
+  background: var(--white);
+  padding: 1.2rem 1.4rem;
+  position: relative;
+}
+.kpi::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--red);
+}
+.kpi-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.4rem;
+  letter-spacing: 0.03em;
+  color: var(--ink);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.kpi-label { font-size: 11px; color: var(--muted); line-height: 1.4; }
+
+.source-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  background: var(--ink);
+  color: #F5F2EC;
+  border-radius: 2px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+
+/* ---- ATTACK TIMELINE ---- */
+.timeline { position: relative; padding-left: 2rem; }
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 7px; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+.tl-item {
+  position: relative;
+  margin-bottom: 1.5rem;
+  cursor: pointer;
+}
+.tl-item::before {
+  content: '';
+  position: absolute;
+  left: -1.85rem; top: 6px;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--border);
+  transition: all 0.2s;
+}
+.tl-item.active::before,
+.tl-item:hover::before {
+  background: var(--red);
+  border-color: var(--red);
+}
+.tl-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 0;
+}
+.tl-company {
+  font-weight: 600;
+  font-size: 14px;
+}
+.tl-date {
+  font-size: 11px;
+  color: var(--muted);
+  margin-left: auto;
+}
+.tl-body {
+  display: none;
+  padding: 10px 0 0;
+  font-size: 13px;
+  color: var(--ink2);
+  line-height: 1.6;
+}
+.tl-body.open { display: block; animation: fadeDown 0.2s ease; }
+.tl-vector {
+  display: inline-block;
+  padding: 2px 8px;
+  background: var(--red-light);
+  color: var(--red);
+  border-radius: 2px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.tl-vu {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: var(--green-light);
+  border-left: 3px solid var(--green);
+  font-size: 12px;
+  color: var(--green);
+  font-weight: 500;
+}
+
+/* ---- CAPABILITIES SECTION ---- */
+.cap-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+.cap-card {
+  background: var(--white);
+  padding: 1.4rem;
+  cursor: pointer;
+  transition: background 0.15s;
+  position: relative;
+}
+.cap-card:hover { background: #FAFAF8; }
+.cap-card.active { background: var(--ink); }
+.cap-card.foundational::before {
+  content: 'FUNDACIONAL';
+  position: absolute;
+  top: 12px; right: 12px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  padding: 2px 6px;
+  border-radius: 2px;
+}
+.cap-card.active.foundational::before { color: rgba(245,242,236,0.4); border-color: rgba(245,242,236,0.2); }
+.cap-card.workforce::before {
+  content: 'WORKFORCE ESPECÍFICO';
+  position: absolute;
+  top: 12px; right: 12px;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--green);
+  border: 1px solid var(--green);
+  padding: 2px 6px;
+  border-radius: 2px;
+}
+.cap-icon { font-size: 1.4rem; margin-bottom: 10px; }
+.cap-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.cap-card.active .cap-title { color: #F5F2EC; }
+.cap-short { font-size: 12px; color: var(--muted); }
+.cap-card.active .cap-short { color: rgba(245,242,236,0.5); }
+
+.cap-detail {
+  display: none;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.5rem;
+  margin-top: 1px;
+  animation: fadeDown 0.2s ease;
+}
+.cap-detail.open { display: block; }
+.cap-detail-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.3rem;
+  letter-spacing: 0.04em;
+  margin-bottom: 8px;
+}
+.cap-detail-body { font-size: 13px; color: var(--ink2); line-height: 1.7; margin-bottom: 12px; }
+.cap-gartner {
+  padding: 10px 14px;
+  background: var(--amber-light);
+  border-left: 3px solid var(--amber);
+  font-size: 12px;
+  color: var(--amber);
+  margin-bottom: 12px;
+}
+.cap-gartner strong { color: var(--ink); }
+.cap-vu {
+  padding: 10px 14px;
+  background: var(--green-light);
+  border-left: 3px solid var(--green);
+  font-size: 12px;
+  color: var(--green);
+}
+.cap-vu strong { color: var(--ink); }
+
+/* ---- POSITIONING SECTION ---- */
+.pos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem; }
+.pos-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.4rem;
+}
+.pos-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3rem;
+  letter-spacing: 0.03em;
+  line-height: 1;
+  color: var(--border);
+  margin-bottom: 8px;
+}
+.pos-title { font-weight: 600; font-size: 14px; margin-bottom: 6px; }
+.pos-body { font-size: 13px; color: var(--ink2); line-height: 1.6; }
+
+.content-ideas {
+  background: var(--ink);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+.content-ideas-header {
+  padding: 1rem 1.4rem;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.content-ideas-header h3 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  color: #F5F2EC;
+}
+.content-ideas-header .badge {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  padding: 2px 8px;
+  background: var(--red);
+  color: white;
+  border-radius: 2px;
+}
+.idea-tabs { display: flex; border-bottom: 1px solid rgba(255,255,255,0.08); }
+.idea-tab {
+  padding: 10px 16px;
+  font-size: 11px;
+  font-weight: 500;
+  color: rgba(245,242,236,0.4);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  background: none;
+  border-top: none; border-left: none; border-right: none;
+  font-family: 'Epilogue', sans-serif;
+  letter-spacing: 0.04em;
+  transition: all 0.15s;
+}
+.idea-tab:hover { color: rgba(245,242,236,0.7); }
+.idea-tab.active { color: #F5F2EC; border-bottom-color: var(--red); }
+.idea-panels { padding: 1.4rem; }
+.idea-panel { display: none; }
+.idea-panel.active { display: block; animation: fadeDown 0.2s ease; }
+.idea-item {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.idea-item:last-child { border-bottom: none; }
+.idea-platform {
+  width: 60px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: rgba(245,242,236,0.4);
+  text-transform: uppercase;
+  flex-shrink: 0;
+  padding-top: 1px;
+}
+.idea-text { font-size: 13px; color: rgba(245,242,236,0.75); line-height: 1.5; }
+.idea-hook { color: #F5F2EC; font-weight: 500; }
+
+/* ---- SALES SECTION ---- */
+.sales-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+.sales-step {
+  background: var(--white);
+  padding: 1.2rem 1.4rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.sales-step:hover { background: #FAFAF8; }
+.sales-step.open { background: var(--blue-light); }
+.step-num {
+  width: 28px; height: 28px;
+  border-radius: 2px;
+  background: var(--ink);
+  color: #F5F2EC;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1rem;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  letter-spacing: 0.04em;
+}
+.sales-step.open .step-num { background: var(--blue); }
+.step-content { flex: 1; }
+.step-title { font-weight: 600; font-size: 14px; margin-bottom: 0; }
+.step-body {
+  display: none;
+  font-size: 13px;
+  color: var(--ink2);
+  line-height: 1.6;
+  margin-top: 8px;
+}
+.step-body.open { display: block; }
+.step-q {
+  display: inline-block;
+  background: var(--ink);
+  color: #F5F2EC;
+  padding: 6px 12px;
+  border-radius: 2px;
+  font-size: 12px;
+  font-style: italic;
+  margin-top: 8px;
+}
+
+/* ---- SHARED ---- */
+.section-eyebrow {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-eyebrow::after { content: ''; flex: 0 0 30px; height: 1px; background: var(--red); }
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  letter-spacing: 0.03em;
+  line-height: 1;
+  margin-bottom: 0.4rem;
+}
+.section-sub { font-size: 13px; color: var(--muted); margin-bottom: 2rem; line-height: 1.5; }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start; }
+
+.tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 2px;
+}
+.tag-red { background: var(--red-light); color: var(--red); }
+.tag-green { background: var(--green-light); color: var(--green); }
+.tag-amber { background: var(--amber-light); color: var(--amber); }
+
+.footnote {
+  font-size: 10px;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+  padding-top: 1.5rem;
+  margin-top: 2rem;
+  line-height: 1.6;
+}
+
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 700px) {
+  .kpi-strip { grid-template-columns: 1fr 1fr; }
+  .cap-grid { grid-template-columns: 1fr; }
+  .pos-grid { grid-template-columns: 1fr; }
+  .two-col { grid-template-columns: 1fr; }
+  .nav-subtitle { display: none; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">Gartner<span>.</span></div>
+  <div class="nav-divider"></div>
+  <div class="nav-subtitle">Workforce Identity Verification Requires Unique Capabilities · Feb 2026</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="show(0,this)">Resumen</button>
+    <button class="nav-tab" onclick="show(1,this)">Contexto</button>
+    <button class="nav-tab" onclick="show(2,this)">Capacidades</button>
+  </div>
+</nav>
+
+<!-- ======== S0: RESUMEN EJECUTIVO ======== -->
+<section class="section active" id="s0">
+<div class="inner" style="padding-top:2rem;">
+
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:2rem;">
+    <div style="background:var(--ink);color:#F5F2EC;padding:6px 14px;border-radius:2px;font-size:10px;font-weight:600;letter-spacing:0.15em;text-transform:uppercase;">Resumen del estudio</div>
+    <div style="font-size:12px;color:var(--muted);">Gartner G00844298 · Febrero 2026 · Akif Khan, Nayara Sangiorgio, James Hoover</div>
+  </div>
+
+  <!-- TESIS -->
+  <div style="background:var(--ink);border-radius:6px;padding:1.8rem 2rem;margin-bottom:1.2rem;position:relative;overflow:hidden;">
+    <div style="position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;background:rgba(200,50,26,0.1);pointer-events:none;"></div>
+    <div style="font-size:10px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:rgba(200,50,26,0.85);margin-bottom:10px;">Tesis central</div>
+    <p style="font-size:16px;color:#F5F2EC;line-height:1.75;font-weight:300;max-width:780px;">La Verificación de Identidad (IDV) —históricamente usada para clientes en banca y KYC— está migrando de forma urgente hacia casos de uso <strong style="font-weight:600;color:white;">internos de las organizaciones</strong>: verificar empleados en el service desk y en el onboarding. La mayoría de los vendors del mercado no están preparados para cubrirlo.</p>
+  </div>
+
+  <!-- ATAQUES -->
+  <div style="margin-bottom:1.2rem;">
+    <div style="font-size:10px;font-weight:600;letter-spacing:0.13em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Los ataques que generaron la urgencia</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:4px;overflow:hidden;">
+      <div style="background:var(--white);padding:1.1rem 1.3rem;">
+        <div style="font-size:12px;font-weight:600;margin-bottom:4px;">MGM Resorts — Scattered Spider</div>
+        <div style="display:inline-block;font-size:10px;font-weight:600;letter-spacing:0.08em;background:var(--red-light);color:var(--red);padding:2px 7px;border-radius:2px;margin-bottom:6px;">Impersonación en IT Service Desk</div>
+        <div style="font-size:13px;color:var(--ink2);line-height:1.5;">El atacante llamó al help desk haciéndose pasar por un empleado y convenció al agente de resetear credenciales. Sin IDV, no hubo forma de verificar la identidad real. Resultado: ransomware masivo.</div>
+      </div>
+      <div style="background:var(--white);padding:1.1rem 1.3rem;border-left:1px solid var(--border);">
+        <div style="font-size:12px;font-weight:600;margin-bottom:4px;">Marks &amp; Spencer — ShinyHunters</div>
+        <div style="display:inline-block;font-size:10px;font-weight:600;letter-spacing:0.08em;background:var(--red-light);color:var(--red);padding:2px 7px;border-radius:2px;margin-bottom:6px;">Account Recovery sin verificación</div>
+        <div style="font-size:13px;color:var(--ink2);line-height:1.5;">Mismo vector que MGM. El IT service desk como puerta de entrada. M&amp;S estimó $400M en pérdidas. La identidad nunca fue verificada antes de proceder.</div>
+      </div>
+      <div style="background:var(--white);padding:1.1rem 1.3rem;border-top:1px solid var(--border);">
+        <div style="font-size:12px;font-weight:600;margin-bottom:4px;">Amazon — Trabajadores Norcoreanos</div>
+        <div style="display:inline-block;font-size:10px;font-weight:600;letter-spacing:0.08em;background:var(--red-light);color:var(--red);padding:2px 7px;border-radius:2px;margin-bottom:6px;">Identidades robadas + deepfakes en entrevistas</div>
+        <div style="font-size:13px;color:var(--ink2);line-height:1.5;">Amazon bloqueó más de 1.800 aplicaciones de ciudadanos norcoreanos que usaron identidades robadas y deepfakes en videollamadas para conseguir empleo remoto y acceder a sistemas internos.</div>
+      </div>
+      <div style="background:var(--white);padding:1.1rem 1.3rem;border-top:1px solid var(--border);border-left:1px solid var(--border);">
+        <div style="font-size:12px;font-weight:600;margin-bottom:4px;">KnowBe4 — Empleado falso</div>
+        <div style="display:inline-block;font-size:10px;font-weight:600;letter-spacing:0.08em;background:var(--red-light);color:var(--red);padding:2px 7px;border-radius:2px;margin-bottom:6px;">Contratación con deepfake en video</div>
+        <div style="font-size:13px;color:var(--ink2);line-height:1.5;">La empresa de ciberseguridad KnowBe4 contrató sin saberlo a un agente norcoreano que manipulaba su imagen con IA en videollamadas. El primer día intentó instalar malware.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4 CASOS DE USO -->
+  <div style="margin-bottom:1.2rem;">
+    <div style="font-size:10px;font-weight:600;letter-spacing:0.13em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Los 4 casos de uso workforce que Gartner define</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:4px;overflow:hidden;">
+      <div style="background:var(--white);padding:1rem 1.2rem;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:2.2rem;color:var(--border);line-height:1;margin-bottom:6px;">01</div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:4px;">Account Recovery</div>
+        <div style="font-size:12px;color:var(--ink2);line-height:1.5;">Verificar quién llama al service desk antes de resetear contraseñas o accesos críticos.</div>
+      </div>
+      <div style="background:var(--white);padding:1rem 1.2rem;border-left:1px solid var(--border);">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:2.2rem;color:var(--border);line-height:1;margin-bottom:6px;">02</div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:4px;">Employee Onboarding</div>
+        <div style="font-size:12px;color:var(--ink2);line-height:1.5;">Verificar que quien recibe credenciales el primer día es realmente quien dice ser.</div>
+      </div>
+      <div style="background:var(--white);padding:1rem 1.2rem;border-left:1px solid var(--border);">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:2.2rem;color:var(--border);line-height:1;margin-bottom:6px;">03</div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:4px;">Acceso Privilegiado</div>
+        <div style="font-size:12px;color:var(--ink2);line-height:1.5;">IDV como paso previo a herramientas PAM o sistemas de alto riesgo dentro de la organización.</div>
+      </div>
+      <div style="background:var(--white);padding:1rem 1.2rem;border-left:1px solid var(--border);">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:2.2rem;color:var(--border);line-height:1;margin-bottom:6px;">04</div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:4px;">Contratación Remota</div>
+        <div style="font-size:12px;color:var(--ink2);line-height:1.5;">Detección de deepfakes e identidades falsas en procesos de selección virtuales.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAPACIDADES -->
+  <div style="margin-bottom:1.2rem;">
+    <div style="font-size:10px;font-weight:600;letter-spacing:0.13em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Qué capacidades debe tener el vendor — según Gartner</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:4px;overflow:hidden;">
+      <div style="background:var(--white);padding:1.1rem 1.3rem;">
+        <div style="display:inline-block;font-size:9px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;background:var(--red-light);color:var(--red);padding:2px 7px;border-radius:2px;margin-bottom:8px;">Fundacional</div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:4px;">PAD — Presentation Attack Detection</div>
+        <div style="font-size:12px;color:var(--ink2);line-height:1.5;">Detecta máscaras, deepfakes en pantalla y fotos impresas. Gartner exige conformidad con ISO 30107-3, idealmente nivel 3.</div>
+      </div>
+      <div style="background:var(--white);padding:1.1rem 1.3rem;border-left:1px solid var(--border);">
+        <div style="display:inline-block;font-size:9px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;background:var(--red-light);color:var(--red);padding:2px 7px;border-radius:2px;margin-bottom:8px;">Fundacional</div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:4px;">IAD — Injection Attack Detection</div>
+        <div style="font-size:12px;color:var(--ink2);line-height:1.5;">Detecta cámaras virtuales y flujos manipulados. Estándar CEN 18099. Pocos vendors evaluados aún — ventaja diferencial para quien lo cumple.</div>
+      </div>
+      <div style="background:var(--white);padding:1.1rem 1.3rem;border-left:1px solid var(--border);">
+        <div style="display:inline-block;font-size:9px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;background:var(--green-light);color:var(--green);padding:2px 7px;border-radius:2px;margin-bottom:8px;">Workforce específico</div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:4px;">Integraciones con el stack empresarial</div>
+        <div style="font-size:12px;color:var(--ink2);line-height:1.5;">AM, ITSM (ServiceNow), HR, PAM, ATS y background checks. Sin estas integraciones, el proyecto de implementación será largo y costoso.</div>
+      </div>
+      <div style="background:var(--white);padding:1.1rem 1.3rem;border-top:1px solid var(--border);">
+        <div style="display:inline-block;font-size:9px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;background:var(--green-light);color:var(--green);padding:2px 7px;border-radius:2px;margin-bottom:8px;">Workforce específico</div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:4px;">Matching automático de identidad</div>
+        <div style="font-size:12px;color:var(--ink2);line-height:1.5;">Comparar identidad verificada contra registros de empleados (AM o HR) de forma automática. Sin esto, el agente queda expuesto a PII y el proceso se vuelve lento e inconsistente.</div>
+      </div>
+      <div style="background:var(--white);padding:1.1rem 1.3rem;border-top:1px solid var(--border);border-left:1px solid var(--border);">
+        <div style="display:inline-block;font-size:9px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;background:var(--green-light);color:var(--green);padding:2px 7px;border-radius:2px;margin-bottom:8px;">Workforce específico</div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:4px;">Control de PII y biométricos</div>
+        <div style="font-size:12px;color:var(--ink2);line-height:1.5;">Purga inmediata post-verificación, retención configurable, almacenamiento por geografía. Gartner recomienda verificar esto primero en cualquier proceso de evaluación de vendor.</div>
+      </div>
+      <div style="background:var(--white);padding:1.1rem 1.3rem;border-top:1px solid var(--border);border-left:1px solid var(--border);">
+        <div style="display:inline-block;font-size:9px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;background:var(--blue-light);color:var(--blue);padding:2px 7px;border-radius:2px;margin-bottom:8px;">Roadmap</div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:4px;">Base para autenticación passwordless</div>
+        <div style="font-size:12px;color:var(--ink2);line-height:1.5;">IDV como primer paso hacia eliminación de contraseñas. El empleado verifica identidad una vez y después se autentica con biometría o credencial verificable (VC) almacenada en su dispositivo.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CITA GARTNER -->
+  <div style="background:var(--red-light);border:1px solid #E8A090;border-radius:4px;padding:1.2rem 1.6rem;margin-bottom:1rem;">
+    <div style="font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--red);margin-bottom:6px;">Conclusión de Gartner</div>
+    <div style="font-size:14px;color:var(--ink);line-height:1.7;font-style:italic;">"Seleccionar vendors que no se especializan en workforce IDV resultará en proyectos de implementación más largos y costosos. Los CISOs deben buscar vendors que tengan integraciones nativas con el stack de IAM y las aplicaciones asociadas, y capacidades para hacer matching automático de identidades contra los registros de empleados."</div>
+    <div style="font-size:11px;color:var(--muted);margin-top:8px;">— Gartner G00844298, Febrero 2026</div>
+  </div>
+
+  <p class="footnote">Fuente: Gartner "Workforce Identity Verification Requires Unique Capabilities", Febrero 2026, ID G00844298. Autores: Akif Khan, Nayara Sangiorgio, James Hoover. © 2026 Gartner, Inc. and/or its affiliates. All rights reserved.</p>
+
+</div>
+</section>
+
+<!-- ======== S1: CONTEXTO ======== -->
+<section class="section" id="s1">
+<div class="inner">
+  <div class="hero">
+    <div class="source-badge">📄 Gartner G00844298 · Febrero 2026</div>
+    <div class="hero-label">Informe Gartner — Febrero 2026</div>
+    <h1 class="hero-title">El IT Service Desk<br>es la <em>nueva</em><br>superficie de ataque</h1>
+    <p class="hero-deck">Gartner documenta el surgimiento de la Verificación de Identidad para fuerza laboral (IDV Workforce) como prioridad urgente para CISOs — y el mercado todavía no está preparado para cubrirlo.</p>
+  </div>
+
+  <div class="kpi-strip">
+    <div class="kpi">
+      <div class="kpi-num">IDV</div>
+      <div class="kpi-label">migra de clientes a empleados — nuevo frente de ciberseguridad</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-num">MGM</div>
+      <div class="kpi-label">hackeado via IT service desk, impersonando a un empleado</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-num">+1800</div>
+      <div class="kpi-label">aplicaciones falsas de norcoreanos bloqueadas por Amazon</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-num">0</div>
+      <div class="kpi-label">de los vendors líderes de IDV enfocados en workforce hoy</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <div class="section-eyebrow">Por qué ahora</div>
+      <h2 class="section-title">Dos vectores de ataque que cambian todo</h2>
+      <p class="section-sub">Hacé clic en cada caso para ver el vector y qué hubiera prevenido el ataque.</p>
+      <div class="timeline">
+        <div class="tl-item" onclick="toggleTl(this)">
+          <div class="tl-header">
+            <span class="tl-company">MGM Resorts · Scattered Spider</span>
+            <span class="tl-date">2023</span>
+          </div>
+          <div class="tl-body">
+            <div class="tl-vector">Vector: Impersonation en IT Service Desk</div>
+            <p>El atacante llamó al help desk haciéndose pasar por un empleado y convenció al agente de resetear credenciales. Sin IDV, el agente no tenía forma de verificar la identidad real del llamador. Resultado: ransomware + robo de datos masivo.</p>
+            <div class="tl-vu" style="border-left-color:var(--green);">✓ Mitigación: verificación biométrica de identidad antes de cualquier acción de account recovery en el service desk.</div>
+          </div>
+        </div>
+        <div class="tl-item" onclick="toggleTl(this)">
+          <div class="tl-header">
+            <span class="tl-company">Marks &amp; Spencer · ShinyHunters</span>
+            <span class="tl-date">2025</span>
+          </div>
+          <div class="tl-body">
+            <div class="tl-vector">Vector: Account Recovery comprometida</div>
+            <p>Ataque similar al de MGM — ingeniería social sobre el proceso de recuperación de cuentas. M&amp;S estimó $400M en pérdidas de ganancias. El vector fue exactamente el mismo: identidad no verificada en el service desk.</p>
+            <div class="tl-vu" style="border-left-color:var(--green);">✓ Mitigación: IDV integrada con ITSM (ServiceNow, etc.) para que el agente solo pueda proceder si la identidad biométrica está verificada.</div>
+          </div>
+        </div>
+        <div class="tl-item" onclick="toggleTl(this)">
+          <div class="tl-header">
+            <span class="tl-company">Amazon · Trabajadores Norcoreanos</span>
+            <span class="tl-date">2024</span>
+          </div>
+          <div class="tl-body">
+            <div class="tl-vector">Vector: Identidades falsas + deepfakes en entrevistas</div>
+            <p>Amazon bloqueó más de 1.800 aplicaciones de ciudadanos de Corea del Norte que usaron identidades robadas y deepfakes en videollamadas para conseguir empleo remoto. El objetivo: acceso a sistemas internos.</p>
+            <div class="tl-vu" style="border-left-color:var(--green);">✓ Mitigación: IDV en el proceso de onboarding con detección de ataques de inyección (IAD) y presentación (PAD) — identifica deepfakes y documentos falsos.</div>
+          </div>
+        </div>
+        <div class="tl-item" onclick="toggleTl(this)">
+          <div class="tl-header">
+            <span class="tl-company">KnowBe4 · Empleado falso de NK</span>
+            <span class="tl-date">2024</span>
+          </div>
+          <div class="tl-body">
+            <div class="tl-vector">Vector: Contratación de actor malicioso via deepfake</div>
+            <p>La empresa de ciberseguridad KnowBe4 contrató sin saberlo a un agente norcoreano que usó IA para modificar su imagen en videollamadas. El empleado falso intentó instalar malware el primer día.</p>
+            <div class="tl-vu" style="border-left-color:var(--green);">✓ Mitigación: verificación de identidad con comparación biométrica contra documento + detección de manipulación de video en tiempo real.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="section-eyebrow">El gap del mercado</div>
+      <h2 class="section-title">La mayoría de los vendors no están listos</h2>
+      <p style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:1rem;">Gartner es explícito: <strong>la mayoría de los vendors de IDV están enfocados en casos B2C</strong> (KYC bancario, onboarding de clientes). No tienen las integraciones con el stack empresarial (AM, ITSM, HR, PAM) que requieren los casos workforce.</p>
+      <p style="font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:1rem;">Eso significa que si un CISO compra un vendor que no es especialista en workforce, va a tener que <strong>construir las integraciones él mismo</strong> — tiempo, dinero y riesgo adicional.</p>
+
+      <div style="background:var(--red-light);border-left:3px solid var(--red);padding:12px 14px;margin-bottom:1rem;border-radius:0 4px 4px 0;">
+        <div style="font-size:11px;font-weight:600;color:var(--red);margin-bottom:4px;letter-spacing:0.06em;">CITA GARTNER</div>
+        <div style="font-size:13px;color:var(--ink2);line-height:1.6;">"Seleccionar vendors que no se especializan en workforce IDV resultará en proyectos de implementación más largos y costosos."</div>
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ======== S2: CAPACIDADES ======== -->
+<section class="section" id="s2">
+<div class="inner" style="padding-top:2rem;">
+  <div class="section-eyebrow">Lo que pide Gartner</div>
+  <h2 class="section-title">Capacidades requeridas para IDV Workforce</h2>
+  <p class="section-sub">Hacé clic en cada capacidad para ver el detalle de Gartner y su alcance e implicancias.</p>
+
+  <div class="cap-grid">
+    <div class="cap-card foundational" onclick="selectCap('pad')">
+      <div class="cap-icon">🛡️</div>
+      <div class="cap-title">Presentation Attack Detection</div>
+      <div class="cap-short">PAD · ISO 30107-3 nivel 3</div>
+    </div>
+    <div class="cap-card foundational" onclick="selectCap('iad')">
+      <div class="cap-icon">💉</div>
+      <div class="cap-title">Injection Attack Detection</div>
+      <div class="cap-short">IAD · Estándar CEN 18099</div>
+    </div>
+    <div class="cap-card workforce" onclick="selectCap('integrations')">
+      <div class="cap-icon">🔗</div>
+      <div class="cap-title">Integración con Stack Empresarial</div>
+      <div class="cap-short">AM · ITSM · HR · PAM · ATS</div>
+    </div>
+    <div class="cap-card workforce" onclick="selectCap('matching')">
+      <div class="cap-icon">🔍</div>
+      <div class="cap-title">Matching Automático de Identidad</div>
+      <div class="cap-short">Contra registros de empleados</div>
+    </div>
+    <div class="cap-card workforce" onclick="selectCap('pii')">
+      <div class="cap-icon">🔒</div>
+      <div class="cap-title">Control de PII y Biométricos</div>
+      <div class="cap-short">Retención · Purga · Geografía</div>
+    </div>
+    <div class="cap-card workforce" onclick="selectCap('passwordless')">
+      <div class="cap-icon">🚀</div>
+      <div class="cap-title">Base para Autenticación Passwordless</div>
+      <div class="cap-short">Biometric auth post-IDV</div>
+    </div>
+  </div>
+
+  <div class="cap-detail" id="cap-detail"></div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:2rem;">
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:4px;padding:1.2rem;">
+      <div style="font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Casos de uso workforce</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px;">
+          <span style="width:6px;height:6px;border-radius:50%;background:var(--red);flex-shrink:0;"></span>
+          <span><strong>Account Recovery</strong> — verificar identidad antes de resetear credenciales en service desk</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px;">
+          <span style="width:6px;height:6px;border-radius:50%;background:var(--red);flex-shrink:0;"></span>
+          <span><strong>Employee Onboarding</strong> — verificar que quien recibe credenciales es quien dice ser</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px;">
+          <span style="width:6px;height:6px;border-radius:50%;background:var(--red);flex-shrink:0;"></span>
+          <span><strong>Privileged Access</strong> — IDV antes de acceder a sistemas críticos o PAM</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px;">
+          <span style="width:6px;height:6px;border-radius:50%;background:var(--red);flex-shrink:0;"></span>
+          <span><strong>Remote Hiring</strong> — detección de deepfakes en entrevistas y validación de documentos</span>
+        </div>
+      </div>
+    </div>
+    <div style="background:var(--ink);border-radius:4px;padding:1.2rem;">
+      <div style="font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(245,242,236,0.4);margin-bottom:10px;">Stack de integración requerido</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+        <div style="background:rgba(255,255,255,0.06);border-radius:2px;padding:6px 10px;font-size:12px;color:rgba(245,242,236,0.7);">Access Management</div>
+        <div style="background:rgba(255,255,255,0.06);border-radius:2px;padding:6px 10px;font-size:12px;color:rgba(245,242,236,0.7);">ITSM (ServiceNow)</div>
+        <div style="background:rgba(255,255,255,0.06);border-radius:2px;padding:6px 10px;font-size:12px;color:rgba(245,242,236,0.7);">HR Systems</div>
+        <div style="background:rgba(255,255,255,0.06);border-radius:2px;padding:6px 10px;font-size:12px;color:rgba(245,242,236,0.7);">PAM Tools</div>
+        <div style="background:rgba(255,255,255,0.06);border-radius:2px;padding:6px 10px;font-size:12px;color:rgba(245,242,236,0.7);">ATS (Recruiting)</div>
+        <div style="background:rgba(255,255,255,0.06);border-radius:2px;padding:6px 10px;font-size:12px;color:rgba(245,242,236,0.7);">Background Checks</div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+
+<script>
+function show(idx, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('s'+idx).classList.add('active');
+  btn.classList.add('active');
+}
+
+function toggleTl(el) {
+  const body = el.querySelector('.tl-body');
+  const wasOpen = body.classList.contains('open');
+  document.querySelectorAll('.tl-body').forEach(b => b.classList.remove('open'));
+  document.querySelectorAll('.tl-item').forEach(i => i.classList.remove('active'));
+  if (!wasOpen) { body.classList.add('open'); el.classList.add('active'); }
+}
+
+const capDetails = {
+  pad: {
+    title: 'Presentation Attack Detection (PAD)',
+    type: 'Capacidad Fundacional',
+    body: 'Detecta cuando un atacante presenta un artefacto fraudulento a la cámara: una máscara, un deepfake en pantalla, una foto impresa. Es la primera línea de defensa en cualquier proceso de IDV — sin PAD, el sistema puede ser engañado con una foto del empleado legítimo.',
+    gartner: '<strong>Gartner exige:</strong> conformidad con el estándar ISO 30107-3, idealmente a Nivel 3. Favorece vendors que hayan sido evaluados formalmente bajo este estándar.',
+    vu: ''
+  },
+  iad: {
+    title: 'Injection Attack Detection (IAD)',
+    type: 'Capacidad Fundacional',
+    body: 'Detecta cuando un atacante bypasea la cámara e inyecta directamente un artefacto digital en el flujo de la aplicación — usando una cámara virtual, un emulador de smartphone, o un proceso de man-in-the-middle. Es el vector más sofisticado y el menos cubierto.',
+    gartner: '<strong>Gartner exige:</strong> evaluación bajo el estándar CEN 18099. Nota que es un estándar nuevo y relativamente pocos vendors han sido testeados — quien lo cumpla tiene ventaja diferencial.',
+    vu: ''
+  },
+  integrations: {
+    title: 'Integración con Stack Empresarial',
+    type: 'Capacidad Workforce Específica',
+    body: 'Para casos workforce, el IDV no puede ser un sistema aislado. Necesita integrarse con: Access Management (AM), IT Service Management (ITSM como ServiceNow), sistemas de HR, herramientas de PAM, sistemas de recruiting (ATS) y servicios de background check.',
+    gartner: '<strong>Gartner advierte:</strong> si el vendor no tiene estas integraciones, el CISO tendrá que construirlas. Eso implica más tiempo, más costo y posibles vulnerabilidades en los workarounds manuales.',
+    vu: ''
+  },
+  matching: {
+    title: 'Matching Automático de Identidad',
+    type: 'Capacidad Workforce Específica',
+    body: 'En account recovery, después de verificar la identidad biométrica, el sistema necesita comparar esa identidad con los registros de empleados (AM o HR). Esto debe ser automático — no manual. Gartner describe tres enfoques: nombre solo con fuzzy logic, nombre + fecha de nacimiento, o comparación biométrica con la foto del empleado en el sistema.',
+    gartner: '<strong>Gartner advierte:</strong> si el matching es manual, el agente del service desk queda expuesto a PII del empleado y el proceso se vuelve lento e inconsistente.',
+    vu: ''
+  },
+  pii: {
+    title: 'Control Configurable de PII y Biométricos',
+    type: 'Capacidad Workforce Específica',
+    body: 'Las organizaciones tienen diferentes requisitos legales y políticos para el manejo de datos biométricos — especialmente en LATAM donde hay regulaciones por país. El vendor debe ofrecer: purga inmediata post-verificación, retención configurable, almacenamiento por geografía, y gestión de consentimiento.',
+    gartner: '<strong>Gartner recomienda:</strong> explorar esto primero en el proceso de evaluación — si el vendor no cumple los requisitos de PII de la organización, queda descartado antes de llegar a cualquier otra evaluación.',
+    vu: ''
+  },
+  passwordless: {
+    title: 'Base para Autenticación Passwordless',
+    type: 'Capacidad Workforce Específica',
+    body: 'Gartner describe cómo algunos vendors de IDV usan el paso de verificación inicial como base para autenticación biométrica futura — el empleado hace IDV una vez, y después puede autenticarse solo con un selfie. También menciona credenciales verificables (VCs) como alternativa que respeta privacidad.',
+    gartner: '<strong>Gartner advierte:</strong> el almacenamiento biométrico a largo plazo puede generar resistencia organizacional. Las VCs son una alternativa que reduce ese headwind.',
+    vu: ''
+  }
+};
+
+function selectCap(id) {
+  document.querySelectorAll('.cap-card').forEach(c => c.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  const d = capDetails[id];
+  const detail = document.getElementById('cap-detail');
+  detail.innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+      <div class="cap-detail-title">${d.title}</div>
+      <span class="tag ${d.type.includes('Fund') ? 'tag-red' : 'tag-green'}">${d.type}</span>
+    </div>
+    <div class="cap-detail-body">${d.body}</div>
+    <div class="cap-gartner">${d.gartner}</div>
+    ${d.vu ? `<div class="cap-vu">${d.vu}</div>` : ""}
+  `;
+  detail.classList.add('open');
+}
+
+function showIdea(idx, btn) {
+  document.querySelectorAll('.idea-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.idea-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('idea-'+idx).classList.add('active');
+}
+
+function toggleStep(el) {
+  const body = el.querySelector('.step-body');
+  const wasOpen = el.classList.contains('open');
+  document.querySelectorAll('.sales-step').forEach(s => { s.classList.remove('open'); s.querySelector('.step-body').classList.remove('open'); });
+  if (!wasOpen) { el.classList.add('open'); body.classList.add('open'); }
+}
+</script>
+</body>
+</html>
