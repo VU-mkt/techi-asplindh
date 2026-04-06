@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Update Semanal · Marketing VU · 30 de Marzo 2026</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --charcoal: #1a1a1a;
+  --charcoal-mid: #2a2a2a;
+  --charcoal-light: #3a3a3a;
+  --coral: #F15E37;
+  --coral-dark: #c94e30;
+  --coral-glow: #ff6b45;
+  --cream: #E6E5C7;
+  --cream-dark: #ccc9a8;
+  --cream-light: #f0eed8;
+  --brown: #8b6f5e;
+  --brown-light: #a08472;
+  --green-pos: #5cb87a;
+  --red-neg: #e85d5d;
+  --amber-warn: #e8a83a;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: var(--coral) var(--charcoal); }
+body { font-family: 'IBM Plex Sans', sans-serif; background: var(--charcoal); color: var(--cream); overflow-x: hidden; line-height: 1.5; }
+
+/* ===== SCROLL PROGRESS ===== */
+.scroll-progress { position: fixed; top: 0; left: 0; height: 2px; background: var(--coral); z-index: 1001; width: 0; transition: width 0.1s; }
+
+/* ===== NAV ===== */
+nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(26,26,26,0.93); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(241,94,55,0.15); transition: transform 0.3s; }
+nav.hidden { transform: translateY(-100%); }
+.nav-inner { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 12px 40px; }
+.nav-brand { font-family: 'IBM Plex Mono', monospace; font-weight: 700; font-size: 14px; letter-spacing: 3px; text-transform: uppercase; color: var(--coral); }
+.nav-date { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--brown-light); letter-spacing: 1px; }
+.nav-links { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
+.nav-links a { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--cream-dark); text-decoration: none; padding: 5px 10px; border-radius: 3px; transition: all 0.2s; white-space: nowrap; }
+.nav-links a:hover, .nav-links a.active { color: var(--coral); background: rgba(241,94,55,0.08); }
+
+/* ===== SECTIONS ===== */
+section { min-height: 100vh; padding: 110px 40px 80px; position: relative; }
+.section-inner { max-width: 1280px; margin: 0 auto; }
+
+/* ===== TYPOGRAPHY ===== */
+.tag { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--coral); border: 1px solid rgba(241,94,55,0.35); padding: 5px 14px; border-radius: 3px; display: inline-block; margin-bottom: 20px; }
+h1 { font-family: 'IBM Plex Sans', sans-serif; font-weight: 700; font-size: clamp(34px, 4.5vw, 60px); line-height: 1.08; color: var(--cream); margin-bottom: 20px; }
+h2 { font-family: 'IBM Plex Sans', sans-serif; font-weight: 700; font-size: clamp(26px, 3.5vw, 44px); line-height: 1.1; color: var(--cream); margin-bottom: 20px; }
+h3 { font-family: 'IBM Plex Sans', sans-serif; font-weight: 600; font-size: 19px; color: var(--cream); margin-bottom: 12px; }
+p.lead { font-size: 17px; line-height: 1.65; color: var(--cream-dark); max-width: 700px; }
+
+/* ===== REVEAL ===== */
+.reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.65s, transform 0.65s; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ===== HERO ===== */
+#hero { display: flex; align-items: center; justify-content: center; min-height: 100vh; text-align: center; position: relative; overflow: hidden; }
+.hero-bg { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(241,94,55,0.03) 60px, rgba(241,94,55,0.03) 61px), repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(241,94,55,0.03) 60px, rgba(241,94,55,0.03) 61px); }
+.hero-content { position: relative; z-index: 1; }
+.hero-eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: var(--brown-light); margin-bottom: 16px; }
+.hero-kpis { display: flex; gap: 48px; justify-content: center; flex-wrap: wrap; margin-top: 52px; }
+.hero-kpi { text-align: center; }
+.hero-kpi .number { font-family: 'IBM Plex Mono', monospace; font-size: 32px; font-weight: 700; color: var(--coral); display: block; }
+.hero-kpi .label { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--cream-dark); margin-top: 5px; display: block; }
+.hero-divider { width: 1px; height: 40px; background: rgba(241,94,55,0.25); align-self: center; }
+
+/* ===== EXEC SUMMARY (cream) ===== */
+.cream-section { background: var(--cream); color: var(--charcoal); }
+.cream-section .tag { color: var(--coral); border-color: rgba(241,94,55,0.4); }
+.cream-section h2, .cream-section h3 { color: var(--charcoal); }
+.cream-section p.lead { color: #555; }
+
+.exec-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; margin-top: 36px; }
+.exec-card { background: white; border-radius: 6px; padding: 22px; border-left: 3px solid var(--coral); cursor: pointer; position: relative; overflow: hidden; transition: all 0.3s; }
+.exec-card .card-tag { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--coral); margin-bottom: 7px; }
+.exec-card h3 { font-size: 15px; color: var(--charcoal); margin-bottom: 0; }
+.exec-card .card-body { font-size: 13px; color: #666; line-height: 1.55; max-height: 0; overflow: hidden; opacity: 0; transition: max-height 0.4s ease, opacity 0.3s, margin-top 0.3s; margin-top: 0; }
+.exec-card:hover .card-body, .exec-card.open .card-body { max-height: 200px; opacity: 1; margin-top: 10px; }
+.exec-card:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.09); }
+.verdict { display: inline-block; margin-top: 8px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; padding: 3px 10px; border-radius: 3px; }
+.verdict.ok { background: rgba(92,184,122,0.12); color: #3a9a5c; }
+.verdict.warn { background: rgba(232,168,58,0.12); color: #b8822a; }
+.verdict.pend { background: rgba(100,100,100,0.1); color: #888; }
+
+/* ===== METRIC CARDS ===== */
+.metrics-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 18px; margin: 28px 0; }
+.metric-card { background: var(--charcoal-mid); border-radius: 6px; padding: 22px; position: relative; overflow: hidden; cursor: default; }
+.metric-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; background: var(--coral); }
+.metric-card .mv { font-family: 'IBM Plex Mono', monospace; font-size: 30px; font-weight: 700; color: var(--cream); }
+.metric-card .ml { font-size: 13px; color: var(--cream-dark); margin-top: 5px; }
+.metric-card .ms { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--brown-light); margin-top: 8px; }
+
+/* ===== FUNNEL ===== */
+.funnels-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 32px; }
+.funnel-card { background: var(--charcoal-mid); border-radius: 8px; padding: 24px 20px; border-top: 3px solid var(--coral); transition: border-color 0.2s, transform 0.2s; }
+.funnel-card:hover { transform: translateY(-2px); }
+.funnel-card.roi-green { border-top-color: var(--green-pos); }
+.funnel-card.roi-red { border-top-color: var(--red-neg); }
+.funnel-card.roi-pending { border-top-color: var(--brown-light); }
+.fc-title { font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--coral); margin-bottom: 14px; }
+.funnel-card.roi-green .fc-title { color: var(--green-pos); }
+.funnel-card.roi-red .fc-title { color: var(--red-neg); }
+.funnel-card.roi-pending .fc-title { color: var(--brown-light); }
+.funnel-steps { display: flex; flex-direction: column; gap: 6px; }
+.funnel-step { display: flex; align-items: center; gap: 10px; }
+.funnel-step .fs-bar { height: 22px; background: rgba(241,94,55,0.18); border-radius: 3px; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; flex: 1; position: relative; overflow: hidden; }
+.funnel-step .fs-bar-fill { position: absolute; left: 0; top: 0; height: 100%; background: rgba(241,94,55,0.35); border-radius: 3px; transition: width 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94); width: 0; }
+.funnel-step .fs-val { font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 600; color: var(--cream); position: relative; z-index: 1; }
+.funnel-step .fs-label { font-size: 11px; color: var(--brown-light); width: 80px; flex-shrink: 0; text-align: right; }
+.fc-meta { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--charcoal-light); }
+.fc-roi { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--brown-light); line-height: 1.6; }
+.fc-roi .roi-val { font-size: 13px; font-weight: 600; }
+.fc-roi .roi-val.green { color: var(--green-pos); }
+.fc-roi .roi-val.red { color: var(--red-neg); }
+.fc-roi .roi-val.pend { color: var(--brown-light); }
+
+/* ===== EVENTS TABLE ===== */
+.events-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 32px; }
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table th { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--coral); text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--charcoal-light); }
+.data-table td { font-size: 13px; padding: 10px 14px; border-bottom: 1px solid rgba(230,229,199,0.06); color: var(--cream-dark); }
+.data-table tr:hover td { background: rgba(241,94,55,0.04); }
+.data-table .num { font-family: 'IBM Plex Mono', monospace; }
+.badge { display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 10px; padding: 2px 8px; border-radius: 3px; }
+.badge.done { background: rgba(92,184,122,0.15); color: var(--green-pos); }
+.badge.soon { background: rgba(241,94,55,0.12); color: var(--coral); }
+.badge.tbd { background: rgba(160,132,114,0.15); color: var(--brown-light); }
+
+/* ===== CAMPAIGN STRUCTURE ===== */
+.campaign-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; margin-top: 28px; }
+.camp-chip { background: var(--charcoal-mid); border: 1px solid var(--charcoal-light); border-radius: 6px; padding: 18px 16px; transition: border-color 0.2s, transform 0.2s; cursor: default; }
+.camp-chip:hover { border-color: var(--coral); transform: translateY(-1px); }
+.camp-chip.active { border-color: var(--coral); background: rgba(241,94,55,0.06); }
+.cc-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--coral); margin-bottom: 6px; }
+.camp-chip.active .cc-label::after { content: ' ←'; color: var(--amber-warn); }
+.cc-desc { font-size: 12px; color: var(--cream-dark); line-height: 1.45; }
+
+/* ===== INVESTIMENT TABLE ===== */
+.inv-table-wrap { background: var(--charcoal-mid); border-radius: 8px; padding: 28px; margin-top: 28px; overflow-x: auto; }
+.inv-table { width: 100%; border-collapse: collapse; min-width: 600px; }
+.inv-table th { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--coral); text-align: left; padding: 10px 16px; border-bottom: 1px solid var(--charcoal-light); }
+.inv-table td { font-size: 13px; padding: 11px 16px; border-bottom: 1px solid rgba(230,229,199,0.05); color: var(--cream-dark); vertical-align: middle; }
+.inv-table tr:hover td { background: rgba(241,94,55,0.03); }
+.inv-table .level { font-family: 'IBM Plex Mono', monospace; font-size: 11px; font-weight: 600; color: var(--coral); }
+.inv-table .range { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--cream); }
+
+/* ===== COMPANY SIZE CARDS ===== */
+.size-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 28px; margin-bottom: 28px; }
+.size-card { background: var(--charcoal-mid); border-radius: 6px; padding: 22px; border-top: 3px solid var(--charcoal-light); }
+.size-card.highlighted { border-top-color: var(--coral); }
+.sc-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--brown-light); margin-bottom: 8px; }
+.sc-range { font-family: 'IBM Plex Mono', monospace; font-size: 22px; font-weight: 700; color: var(--cream); margin-bottom: 4px; }
+.sc-sub { font-size: 12px; color: var(--brown-light); }
+
+/* ===== BAR CHART ===== */
+.bar-section { margin-top: 28px; }
+.bar-chart { display: flex; flex-direction: column; gap: 12px; }
+.bar-row { display: grid; grid-template-columns: 160px 1fr 70px; align-items: center; gap: 14px; }
+.bar-label { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--cream-dark); text-align: right; }
+.bar-track { height: 26px; background: var(--charcoal-light); border-radius: 3px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 3px; background: var(--coral); width: 0; transition: width 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+.bar-value { font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 600; color: var(--cream); }
+.bar-note { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--brown-light); margin-top: 12px; }
+
+/* ===== ACCIONES LIST ===== */
+.actions-split { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; margin-top: 28px; }
+.action-group { }
+.ag-title { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--coral); margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid rgba(241,94,55,0.2); }
+.action-item { display: flex; gap: 10px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid rgba(230,229,199,0.06); font-size: 13px; color: var(--cream-dark); line-height: 1.5; }
+.action-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--coral); flex-shrink: 0; margin-top: 6px; }
+.action-dot.grey { background: var(--charcoal-light); }
+
+/* ===== CLIENTS ===== */
+.client-card { background: var(--charcoal-mid); border-radius: 8px; padding: 22px 24px; border-left: 3px solid var(--amber-warn); margin-top: 20px; }
+.cc-title-small { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--amber-warn); margin-bottom: 8px; }
+
+/* ===== TOP POSTS ===== */
+.posts-table { width: 100%; border-collapse: collapse; margin-top: 24px; }
+.posts-table th { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--coral); text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--charcoal-light); }
+.posts-table td { font-size: 12px; padding: 10px 12px; border-bottom: 1px solid rgba(230,229,199,0.06); color: var(--cream-dark); line-height: 1.4; }
+.posts-table tr:hover td { background: rgba(241,94,55,0.04); }
+.posts-table .imp { font-family: 'IBM Plex Mono', monospace; font-weight: 600; color: var(--coral); }
+.posts-table .rank { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--brown-light); }
+.lang-badge { font-family: 'IBM Plex Mono', monospace; font-size: 9px; padding: 2px 6px; background: rgba(241,94,55,0.1); color: var(--coral); border-radius: 2px; }
+
+/* ===== EVENTOS SIN OPT ===== */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 20px; }
+.info-block { background: var(--charcoal-mid); border-radius: 6px; padding: 20px; }
+.ib-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--brown-light); margin-bottom: 10px; }
+.ib-item { font-size: 13px; color: var(--cream-dark); padding: 6px 0; border-bottom: 1px solid rgba(230,229,199,0.06); }
+
+/* ===== CLOSING ===== */
+#closing { display: flex; align-items: center; justify-content: center; text-align: center; background: var(--coral); min-height: 50vh; }
+#closing h2 { color: white; font-size: clamp(28px, 3.5vw, 48px); }
+#closing .tag { color: white; border-color: rgba(255,255,255,0.4); }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  section { padding: 90px 20px 60px; }
+  .actions-split, .events-grid, .two-col { grid-template-columns: 1fr; }
+  .bar-row { grid-template-columns: 90px 1fr 60px; }
+  .nav-inner { padding: 10px 20px; }
+  .nav-links a { font-size: 9px; padding: 4px 7px; }
+  .size-cards { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<nav id="mainNav">
+  <div class="nav-inner">
+    <div class="nav-brand">VU</div>
+    <div class="nav-date">30 · 03 · 2026</div>
+    <div class="nav-links">
+      <a href="#exec">Resumen</a>
+      <a href="#acciones">Acciones</a>
+      <a href="#pipeline">Pipeline</a>
+      <a href="#eventos-cerrados">Cerrados</a>
+      <a href="#campana">Campaña</a>
+      <a href="#inversion">Inversión</a>
+      <a href="#reportes">Reportes</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ==================== HERO ==================== -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Update Semanal</div>
+    <div class="tag">30 de Marzo · 2026</div>
+    <h1>Update Semanal<br>Marketing VU</h1>
+    <p class="lead" style="margin: 0 auto; text-align:center;">Acciones en curso, pipeline de conversión, campaña VU ONE<br>e inversión en ciberseguridad.</p>
+    <div class="hero-kpis">
+      <div class="hero-kpi">
+        <span class="number">34</span>
+        <span class="label">Inscriptos VU ONE</span>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hero-kpi">
+        <span class="number">8</span>
+        <span class="label">Países en roadmap</span>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hero-kpi">
+        <span class="number">5</span>
+        <span class="label">Funnels activos</span>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hero-kpi">
+        <span class="number">8.331%</span>
+        <span class="label">ROI · Fintech America</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== EXEC SUMMARY ==================== -->
+<section id="exec" class="cream-section">
+  <div class="section-inner">
+    <div class="tag reveal">Resumen Ejecutivo</div>
+    <h2 class="reveal">Situación al 30 de marzo.</h2>
+    <p class="lead reveal" style="margin-bottom: 8px; color: #666;">Hover para ver detalle de cada área.</p>
+    <div class="exec-grid">
+
+      <div class="exec-card reveal">
+        <div class="card-tag">Acciones · Completadas</div>
+        <h3>Fintech America + VU ONE Baires lanzados</h3>
+        <span class="verdict ok">Ejecutado</span>
+        <div class="card-body">Lanzamiento VU ONE Buenos Aires y participación en Fintech America completados. Campaña VU ONE en fase Features activa. 4 representantes en Miami con materiales y activaciones en LinkedIn, X y email (pre, durante y post evento).</div>
+      </div>
+
+      <div class="exec-card reveal">
+        <div class="card-tag">VU ONE · Lanzamientos Latam</div>
+        <h3>34 inscriptos · 8 países programados</h3>
+        <span class="verdict ok">En marcha</span>
+        <div class="card-body">Argentina confirmado (9 abr, Globant). Ecuador × 2 en abril. Chile en mayo con Globant. Colombia cerrado con Infomedia. Perú 14 mayo. SA, DO y CR con Microsoft. CR y Panamá sin fecha confirmada.</div>
+      </div>
+
+      <div class="exec-card reveal">
+        <div class="card-tag">Pipeline · Conversión</div>
+        <h3>Fintech America: ROI 8.331% · U$S 4,3M won</h3>
+        <span class="verdict ok">Alto rendimiento</span>
+        <div class="card-body">92 prospects contactados, 88 con opp identificada, 67 abiertas, 51 cerradas ganadas. 21% son oportunidades new. Budget U$S 51K. Review deadline septiembre. RSA: ROI negativo (-48.67%), bajo conversión.</div>
+      </div>
+
+      <div class="exec-card reveal">
+        <div class="card-tag">En Proceso</div>
+        <h3>Web nueva · Brand book · Prensa 2026</h3>
+        <span class="verdict warn">Pendiente aprobación</span>
+        <div class="card-body">Nueva web en desarrollo. Adaptación brand book en proceso (VU → nueva estética → template). Prensa 2026 y caso de éxito Punto RED en cola. Agencia PR para Brasil. Legislación nueva CR. Banking Tech Summit 23/4.</div>
+      </div>
+
+      <div class="exec-card reveal">
+        <div class="card-tag">Clientes · Contenido</div>
+        <h3>Modo: entrevista en abril</h3>
+        <span class="verdict warn">A coordinar</span>
+        <div class="card-body">Oportunidad de colaborar con clientes via charlas y campañas conjuntas de concientización (fraude, ciberestafa). Banco Galicia como referencia de activación con clientes finales. Modo confirmado para entrevista en abril.</div>
+      </div>
+
+      <div class="exec-card reveal">
+        <div class="card-tag">Reportes · Automatización</div>
+        <h3>8 de 10 top posts con personas reales</h3>
+        <span class="verdict ok">Insight clave</span>
+        <div class="card-body">CEO, VP y casos de fraude dominan el top 10 de posts en LinkedIn. Post #1: 3005 impresiones (Carla Moroni Brunetti). Reportes automáticos y campaña i3 Inspira ya desarrollados como referencia de metodología.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ==================== ACCIONES ==================== -->
+<section id="acciones">
+  <div class="section-inner">
+    <div class="tag reveal">Acciones</div>
+    <h2 class="reveal">Qué está pasando ahora.</h2>
+
+    <div class="actions-split reveal">
+      <div class="action-group">
+        <div class="ag-title">Completado</div>
+        <div class="action-item"><div class="action-dot"></div>Lanzamiento VU ONE Buenos Aires</div>
+        <div class="action-item"><div class="action-dot"></div>Fintech America Miami — activaciones pre, durante y post</div>
+        <div class="action-item"><div class="action-dot"></div>Campaña VU ONE — fase Features activa</div>
+        <div class="action-item"><div class="action-dot"></div>Colombia (Infomedia) — lanzamiento cerrado</div>
+      </div>
+      <div class="action-group">
+        <div class="ag-title">En proceso</div>
+        <div class="action-item"><div class="action-dot grey"></div>Lanzamiento VU ONE Latam — 8 países programados</div>
+        <div class="action-item"><div class="action-dot grey"></div>VU ONE fase Módulos</div>
+        <div class="action-item"><div class="action-dot grey"></div>Nueva legislación CR</div>
+        <div class="action-item"><div class="action-dot grey"></div>Agencia PR para Brasil</div>
+        <div class="action-item"><div class="action-dot grey"></div>Nueva web</div>
+        <div class="action-item"><div class="action-dot grey"></div>Brand book — adaptación nueva estética</div>
+        <div class="action-item"><div class="action-dot grey"></div>Prensa 2026 + Caso de éxito Punto RED</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 36px;">
+      <h3 class="reveal" style="margin-bottom: 16px;">Próximos eventos</h3>
+      <div class="metrics-row reveal">
+        <div class="metric-card">
+          <div class="mv">23 Abr</div>
+          <div class="ml">Banking Tech Summit</div>
+          <div class="ms">Próximo evento confirmado</div>
+        </div>
+        <div class="metric-card">
+          <div class="mv">Abr</div>
+          <div class="ml">Cámara Colombia / Perú</div>
+          <div class="ms">Contacto institucional</div>
+        </div>
+        <div class="metric-card">
+          <div class="mv">Abr</div>
+          <div class="ml">Modo · Entrevista cliente</div>
+          <div class="ms">Contenido con clientes</div>
+        </div>
+        <div class="metric-card">
+          <div class="mv">TBD</div>
+          <div class="ml">Post puntual con SS</div>
+          <div class="ms">En desarrollo</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 36px;" class="reveal">
+      <h3 style="margin-bottom: 18px;">Lanzamientos VU ONE · Roadmap Latam</h3>
+      <div class="inv-table-wrap" style="padding: 0; background: var(--charcoal-mid);">
+        <table class="data-table" style="width:100%">
+          <thead>
+            <tr>
+              <th>País</th>
+              <th>Partner / Lugar</th>
+              <th>Fecha</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>CO · Colombia</td><td>Infomedia</td><td>—</td><td><span class="badge done">Done</span></td></tr>
+            <tr><td>AR · Argentina</td><td>Globant</td><td>9 Abr</td><td><span class="badge soon">Confirmado</span></td></tr>
+            <tr><td>EC · Ecuador</td><td>TBD</td><td>22 Abr</td><td><span class="badge soon">Confirmado</span></td></tr>
+            <tr><td>EC · Ecuador</td><td>TBD</td><td>Abril</td><td><span class="badge tbd">Por confirmar</span></td></tr>
+            <tr><td>CR · Costa Rica</td><td>Microsoft</td><td>Abril</td><td><span class="badge tbd">Por confirmar</span></td></tr>
+            <tr><td>SA · Arabia Saudita</td><td>Microsoft</td><td>Abril</td><td><span class="badge tbd">Por confirmar</span></td></tr>
+            <tr><td>DO · Rep. Dominicana</td><td>Microsoft</td><td>Abril</td><td><span class="badge tbd">Por confirmar</span></td></tr>
+            <tr><td>PE · Perú</td><td>—</td><td>14 May</td><td><span class="badge soon">Confirmado</span></td></tr>
+            <tr><td>CL · Chile</td><td>Globant</td><td>Mayo</td><td><span class="badge tbd">Por confirmar</span></td></tr>
+            <tr><td>PN · Panamá</td><td>Microsoft</td><td>—</td><td><span class="badge tbd">Sin fecha</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="margin-top: 10px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--coral);">34 inscriptos totales al 30/03</div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== PIPELINE ACTIVO ==================== -->
+<section id="pipeline" class="cream-section">
+  <div class="section-inner">
+    <div class="tag reveal">Pipeline · 6-Month Target</div>
+    <h2 class="reveal">Conversión por iniciativa.</h2>
+    <p class="lead reveal" style="color:#666; margin-bottom: 8px;">Funnels activos con objetivo a 6 meses. ROI calculado al vencimiento de cada ventana.</p>
+
+    <div class="funnels-grid reveal">
+
+      <div class="funnel-card roi-pending">
+        <div class="fc-title">VU ONE BR</div>
+        <div class="funnel-steps">
+          <div class="funnel-step">
+            <div class="fs-label">Contactados</div>
+            <div class="fs-bar"><div class="fs-bar-fill" data-width="100"></div><span class="fs-val">75</span></div>
+          </div>
+          <div class="funnel-step">
+            <div class="fs-label">Con Opp.</div>
+            <div class="fs-bar"><div class="fs-bar-fill" data-width="3"></div><span class="fs-val">2</span></div>
+          </div>
+          <div class="funnel-step">
+            <div class="fs-label">Open + Won</div>
+            <div class="fs-bar"><div class="fs-bar-fill" data-width="1.5"></div><span class="fs-val">1</span></div>
+          </div>
+        </div>
+        <div class="fc-meta">
+          <div class="fc-roi">Inversión: <span class="num">—</span> · <span class="roi-val pend">ROI: 0%</span></div>
+          <div class="fc-roi" style="margin-top:3px;">Review: <span class="num">Mayo 2026</span></div>
+        </div>
+      </div>
+
+      <div class="funnel-card roi-pending">
+        <div class="fc-title">Deepfake BR</div>
+        <div class="funnel-steps">
+          <div class="funnel-step">
+            <div class="fs-label">Contactados</div>
+            <div class="fs-bar"><div class="fs-bar-fill" data-width="100"></div><span class="fs-val">44</span></div>
+          </div>
+          <div class="funnel-step">
+            <div class="fs-label">Con Opp.</div>
+            <div class="fs-bar"><div class="fs-bar-fill" data-width="2.5"></div><span class="fs-val">1</span></div>
+          </div>
+          <div class="funnel-step">
+            <div class="fs-label">Invertido</div>
+            <div class="fs-bar" style="background: rgba(160,132,114,0.15);"><div class="fs-bar-fill" style="background:rgba(160,132,114,0.4);" data-width="100"></div><span class="fs-val" style="color:var(--brown-light);">U$S 195</span></div>
+          </div>
+        </div>
+        <div class="fc-meta">
+          <div class="fc-roi">50% de opp. · <span class="roi-val pend">ROI: 0%</span></div>
+          <div class="fc-roi" style="margin-top:3px;">Review: <span class="num">Mayo 2026</span></div>
+        </div>
+      </div>
+
+      <div class="funnel-card roi-pending">
+        <div class="fc-title">Fintech A 2026</div>
+        <div class="funnel-steps">
+          <div class="funnel-step">
+            <div class="fs-label">Alcance</div>
+            <div class="fs-bar"><div class="fs-bar-fill" data-width="100"></div><span class="fs-val">5,8M</span></div>
+          </div>
+          <div class="funnel-step">
+            <div class="fs-label">Con Opp.</div>
+            <div class="fs-bar"><div class="fs-bar-fill" data-width="0.5"></div><span class="fs-val">30</span></div>
+          </div>
+        </div>
+        <div class="fc-meta">
+          <div class="fc-roi">Inversión: <span class="num">U$S 100K</span> · <span class="roi-val pend">ROI: 0%</span></div>
+          <div class="fc-roi" style="margin-top:3px;">Review: <span class="num">Sep 2026</span></div>
+        </div>
+      </div>
+
+      <div class="funnel-card roi-pending">
+        <div class="fc-title">RSA 2026</div>
+        <div class="funnel-steps">
+          <div class="funnel-step">
+            <div class="fs-label">Contactados</div>
+            <div class="fs-bar"><div class="fs-bar-fill" data-width="100"></div><span class="fs-val">—</span></div>
+          </div>
+        </div>
+        <div class="fc-meta">
+          <div class="fc-roi">Inversión: <span class="num">U$S 5K</span> · <span class="roi-val pend">ROI: 0%</span></div>
+          <div class="fc-roi" style="margin-top:3px;">Review: <span class="num">Sep 2026</span></div>
+        </div>
+      </div>
+
+      <div class="funnel-card roi-pending">
+        <div class="fc-title">VU ONE CO</div>
+        <div class="funnel-steps">
+          <div class="funnel-step">
+            <div class="fs-label">Contactados</div>
+            <div class="fs-bar"><div class="fs-bar-fill" data-width="100"></div><span class="fs-val">—</span></div>
+          </div>
+        </div>
+        <div class="fc-meta">
+          <div class="fc-roi">Inversión: <span class="num">U$S 2K</span> · <span class="roi-val pend">ROI: 0%</span></div>
+          <div class="fc-roi" style="margin-top:3px;">Review: <span class="num">Sep 2026</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="two-col reveal" style="margin-top: 36px;">
+      <div class="info-block">
+        <div class="ib-label">Eventos sin vinculación a OPT</div>
+        <div class="ib-item">HIS — U$S 2.000 — Marzo</div>
+        <div class="ib-item">Aiuken — U$S 3.000 — Mayo</div>
+      </div>
+      <div class="info-block">
+        <div class="ib-label">Eventos dados de alta</div>
+        <div class="ib-item">Banking Tech Summit 2026</div>
+        <div class="ib-item">Febraban 2026</div>
+        <div class="ib-item">Marketing · Inbound</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== EVENTOS CERRADOS ==================== -->
+<section id="eventos-cerrados">
+  <div class="section-inner">
+    <div class="tag reveal">Closed · 6 Meses</div>
+    <h2 class="reveal">Resultados con ventana de retorno cumplida.</h2>
+
+    <div class="funnels-grid reveal" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+
+      <div class="funnel-card roi-green">
+        <div class="fc-title">Fintech America</div>
+        <div class="funnel-steps">
+          <div class="funnel-step"><div class="fs-label">Contactados</div><div class="fs-bar"><div class="fs-bar-fill" style="background:rgba(92,184,122,0.4);" data-width="100"></div><span class="fs-val">92</span></div></div>
+          <div class="funnel-step"><div class="fs-label">Con Opp.</div><div class="fs-bar"><div class="fs-bar-fill" style="background:rgba(92,184,122,0.4);" data-width="96"></div><span class="fs-val">88 · 94%</span></div></div>
+          <div class="funnel-step"><div class="fs-label">Open+Won</div><div class="fs-bar"><div class="fs-bar-fill" style="background:rgba(92,184,122,0.4);" data-width="73"></div><span class="fs-val">67 · 76%</span></div></div>
+          <div class="funnel-step"><div class="fs-label">Closed Won</div><div class="fs-bar"><div class="fs-bar-fill" style="background:rgba(92,184,122,0.6);" data-width="55"></div><span class="fs-val">51</span></div></div>
+        </div>
+        <div class="fc-meta">
+          <div class="fc-roi">U$S 4,3M won · Est. U$S 11M · <span class="roi-val green">ROI 8.331%</span></div>
+          <div class="fc-roi" style="margin-top:3px;">Budget: U$S 51K · Review: Sep</div>
+        </div>
+      </div>
+
+      <div class="funnel-card roi-red">
+        <div class="fc-title">RSA</div>
+        <div class="funnel-steps">
+          <div class="funnel-step"><div class="fs-label">Contactados</div><div class="fs-bar"><div class="fs-bar-fill" style="background:rgba(232,93,93,0.3);" data-width="100"></div><span class="fs-val">69</span></div></div>
+          <div class="funnel-step"><div class="fs-label">Con Opp.</div><div class="fs-bar"><div class="fs-bar-fill" style="background:rgba(232,93,93,0.3);" data-width="28"></div><span class="fs-val">19 · 17%</span></div></div>
+          <div class="funnel-step"><div class="fs-label">Open+Won</div><div class="fs-bar"><div class="fs-bar-fill" style="background:rgba(232,93,93,0.3);" data-width="15"></div><span class="fs-val">10 · 55%</span></div></div>
+          <div class="funnel-step"><div class="fs-label">Closed Won</div><div class="fs-bar"><div class="fs-bar-fill" style="background:rgba(232,93,93,0.4);" data-width="4"></div><span class="fs-val">3</span></div></div>
+        </div>
+        <div class="fc-meta">
+          <div class="fc-roi">U$S 7.700 · Est. U$S 2,8M · <span class="roi-val red">ROI -48.67%</span></div>
+          <div class="fc-roi" style="margin-top:3px;">Budget: U$S 15K · Review: Oct</div>
+        </div>
+      </div>
+
+      <div class="funnel-card roi-pending">
+        <div class="fc-title">IT Forum</div>
+        <div class="funnel-steps">
+          <div class="funnel-step"><div class="fs-label">Contactados</div><div class="fs-bar"><div class="fs-bar-fill" data-width="100"></div><span class="fs-val">23</span></div></div>
+          <div class="funnel-step"><div class="fs-label">Con Opp.</div><div class="fs-bar"><div class="fs-bar-fill" data-width="35"></div><span class="fs-val">8 · 34%</span></div></div>
+          <div class="funnel-step"><div class="fs-label">Open+Won</div><div class="fs-bar"><div class="fs-bar-fill" data-width="17"></div><span class="fs-val">4 · 50%</span></div></div>
+          <div class="funnel-step"><div class="fs-label">Closed Won</div><div class="fs-bar"><div class="fs-bar-fill" data-width="4"></div><span class="fs-val">1</span></div></div>
+        </div>
+        <div class="fc-meta">
+          <div class="fc-roi">U$S 0,16M · Est. U$S 1,6M · <span class="roi-val pend">ROI 0.06%</span></div>
+          <div class="fc-roi" style="margin-top:3px;">Budget: U$S 15K · Review: Nov</div>
+        </div>
+      </div>
+
+      <div class="funnel-card roi-pending">
+        <div class="fc-title">Febraban</div>
+        <div class="funnel-steps">
+          <div class="funnel-step"><div class="fs-label">Contactados</div><div class="fs-bar"><div class="fs-bar-fill" data-width="100"></div><span class="fs-val">766</span></div></div>
+          <div class="funnel-step"><div class="fs-label">Con Opp.</div><div class="fs-bar"><div class="fs-bar-fill" data-width="1"></div><span class="fs-val">8 · 1.3%</span></div></div>
+          <div class="funnel-step"><div class="fs-label">Open+Won</div><div class="fs-bar"><div class="fs-bar-fill" data-width="0.1"></div><span class="fs-val">1 · 10%</span></div></div>
+        </div>
+        <div class="fc-meta">
+          <div class="fc-roi">Est. U$S 1,0M · <span class="roi-val pend">ROI: 0%</span></div>
+          <div class="fc-roi" style="margin-top:3px;">Budget: U$S 20K · Review: Dic</div>
+        </div>
+      </div>
+
+      <div class="funnel-card roi-pending">
+        <div class="fc-title">Black Hat</div>
+        <div class="funnel-steps">
+          <div class="funnel-step"><div class="fs-label">Contactados</div><div class="fs-bar"><div class="fs-bar-fill" data-width="100"></div><span class="fs-val">66</span></div></div>
+          <div class="funnel-step"><div class="fs-label">Con Opp.</div><div class="fs-bar"><div class="fs-bar-fill" data-width="12"></div><span class="fs-val">8 · 1.3%</span></div></div>
+          <div class="funnel-step"><div class="fs-label">Open+Won</div><div class="fs-bar"><div class="fs-bar-fill" data-width="8"></div><span class="fs-val">5 · 62%</span></div></div>
+        </div>
+        <div class="fc-meta">
+          <div class="fc-roi">U$S 0,4 · <span class="roi-val pend">ROI: 0%</span></div>
+          <div class="fc-roi" style="margin-top:3px;">Budget: U$S 6.892 · Review: Mar 2026</div>
+        </div>
+      </div>
+
+      <div class="funnel-card roi-green">
+        <div class="fc-title">Expo BO</div>
+        <div class="funnel-steps">
+          <div class="funnel-step"><div class="fs-label">Con Opp.</div><div class="fs-bar"><div class="fs-bar-fill" style="background:rgba(92,184,122,0.4);" data-width="100"></div><span class="fs-val">2</span></div></div>
+          <div class="funnel-step"><div class="fs-label">Open+Won</div><div class="fs-bar"><div class="fs-bar-fill" style="background:rgba(92,184,122,0.4);" data-width="100"></div><span class="fs-val">2</span></div></div>
+        </div>
+        <div class="fc-meta">
+          <div class="fc-roi">U$S 0,4K won · <span class="roi-val green">ROI: 19.000%</span></div>
+          <div class="fc-roi" style="margin-top:3px;">Budget: U$S 1K · Review: Mar 2026</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CAMPAÑA VU ONE ==================== -->
+<section id="campana" class="cream-section">
+  <div class="section-inner">
+    <div class="tag reveal">Campaña VU ONE</div>
+    <h2 class="reveal">Estructura de contenido activa.</h2>
+    <p class="lead reveal" style="color:#666; margin-bottom: 8px;">LinkedIn · Email · Twitter (EN) · Prensa PT y SP</p>
+
+    <div class="campaign-grid reveal">
+      <div class="camp-chip active">
+        <div class="cc-label">Lanzamiento</div>
+        <div class="cc-desc">Activado. Base de la campaña ya ejecutada en AR y CO.</div>
+      </div>
+      <div class="camp-chip active">
+        <div class="cc-label">Beneficios</div>
+        <div class="cc-desc">En pauta activa. Eje del funnel de awareness B2B.</div>
+      </div>
+      <div class="camp-chip active">
+        <div class="cc-label">Comerciales</div>
+        <div class="cc-desc">Activos. Orientados a conversación comercial directa.</div>
+      </div>
+      <div class="camp-chip active">
+        <div class="cc-label">Módulos</div>
+        <div class="cc-desc">Fase en proceso. Detalle de funcionalidades por módulo.</div>
+      </div>
+      <div class="camp-chip">
+        <div class="cc-label">Features</div>
+        <div class="cc-desc">Fase actual. En ejecución semana del 30/03.</div>
+      </div>
+      <div class="camp-chip">
+        <div class="cc-label">Ventajas</div>
+        <div class="cc-desc">Próxima fase. Diferenciación competitiva.</div>
+      </div>
+      <div class="camp-chip">
+        <div class="cc-label">Casos de Uso</div>
+        <div class="cc-desc">Pendiente. Requiere coordinación con clientes.</div>
+      </div>
+      <div class="camp-chip">
+        <div class="cc-label">Industrias</div>
+        <div class="cc-desc">Pendiente. Segmentación por vertical.</div>
+      </div>
+      <div class="camp-chip">
+        <div class="cc-label">Desafíos / Solución</div>
+        <div class="cc-desc">Pendiente. Narrativa de problema → resolución.</div>
+      </div>
+    </div>
+
+    <div class="client-card reveal">
+      <div class="cc-title-small">Oportunidad · Colaboración con clientes</div>
+      <p style="font-size:14px; color: var(--cream-dark); line-height:1.6;">Activar colaboraciones tipo charla o campaña conjunta con clientes. Referencia: Banco de la Nación Argentina + Daniel López Rosetti — cierre de año sobre ciberestafa y fraude digital. Eje: <strong>concientización, prevención y ecosistema de protección.</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== INVERSIÓN ==================== -->
+<section id="inversion">
+  <div class="section-inner">
+    <div class="tag reveal">Inversión Ciberseguridad</div>
+    <h2 class="reveal">Contexto de mercado para posicionamiento.</h2>
+
+    <div class="size-cards reveal">
+      <div class="size-card">
+        <div class="sc-label">Empresa chica (&lt;100 emp.)</div>
+        <div class="sc-range">$8.5K–$78K</div>
+        <div class="sc-sub">Anual · 10–20% del IT</div>
+      </div>
+      <div class="size-card highlighted">
+        <div class="sc-label">Empresa mediana (100–1K)</div>
+        <div class="sc-range">$40K–$75K</div>
+        <div class="sc-sub">Anual · 8–15% del IT</div>
+      </div>
+      <div class="size-card">
+        <div class="sc-label">Empresa grande (1K+ emp.)</div>
+        <div class="sc-range">$1M–$2M+</div>
+        <div class="sc-sub">Anual · 10–20% del IT</div>
+      </div>
+    </div>
+
+    <div class="bar-section reveal">
+      <h3 style="margin-bottom: 18px;">% del presupuesto IT asignado a ciberseguridad por industria (2025)</h3>
+      <div class="chart-container" style="background: var(--charcoal-mid); border-radius:8px; padding: 28px;">
+        <div class="bar-chart">
+          <div class="bar-row"><span class="bar-label">Tecnología</span><div class="bar-track"><div class="bar-fill" data-width="100"></div></div><span class="bar-value">13.3%</span></div>
+          <div class="bar-row"><span class="bar-label">Salud / Healthcare</span><div class="bar-track"><div class="bar-fill" data-width="100"></div></div><span class="bar-value">13.3%</span></div>
+          <div class="bar-row"><span class="bar-label">Serv. empresariales</span><div class="bar-track"><div class="bar-fill" data-width="99"></div></div><span class="bar-value">13.2%</span></div>
+          <div class="bar-row"><span class="bar-label">Bienes de consumo</span><div class="bar-track"><div class="bar-fill" data-width="73"></div></div><span class="bar-value">9.7%</span></div>
+          <div class="bar-row"><span class="bar-label">Serv. financieros</span><div class="bar-track"><div class="bar-fill" data-width="72"></div></div><span class="bar-value">9.6%</span></div>
+          <div class="bar-row"><span class="bar-label">Manufactura</span><div class="bar-track"><div class="bar-fill" data-width="46"></div></div><span class="bar-value">6.1%</span></div>
+          <div class="bar-row"><span class="bar-label">Retail / Comercio</span><div class="bar-track"><div class="bar-fill" data-width="45"></div></div><span class="bar-value">6.0%</span></div>
+        </div>
+        <div class="bar-note">Fuentes: Gartner IT Budget Benchmarks · IANS/Artico Search Security Budget Benchmark 2025 · Deloitte Technology Spend Report · Elisity Cybersecurity Budget Guide 2026</div>
+      </div>
+    </div>
+
+    <div class="reveal" style="margin-top: 32px;">
+      <h3 style="margin-bottom: 16px;">Niveles de inversión · Empresa de U$S 10M de ingresos anuales</h3>
+      <div class="inv-table-wrap">
+        <table class="inv-table">
+          <thead>
+            <tr>
+              <th>Nivel</th>
+              <th>Categoría</th>
+              <th>% del nivel anterior</th>
+              <th>Rango típico</th>
+              <th>Ej. empresa $10M</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="level">Base</td><td>Ingresos totales</td><td>100% (base)</td><td>—</td><td class="range">$10,000,000</td></tr>
+            <tr><td class="level">N1</td><td>Presupuesto IT</td><td>3%–7% de ingresos</td><td>2%–10%+ según industria</td><td class="range">$300K–$700K</td></tr>
+            <tr><td class="level">N2</td><td>Ciberseguridad</td><td>8%–15% del IT</td><td>6%–20% según industria</td><td class="range">$24K–$105K</td></tr>
+            <tr><td class="level">N3</td><td>IAM / Identidades</td><td>8%–20% del cyber</td><td>15%–20% en fase impl.</td><td class="range">$1.920–$21K</td></tr>
+            <tr><td class="level">N4</td><td>Fraude / Autenticación</td><td>5%–10% del cyber</td><td>Mayor en finanzas y salud</td><td class="range">$1.200–$10.5K</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="margin-top: 10px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--brown-light);">Industria de referencia: servicios profesionales / tech</div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== REPORTES Y AUTOMATIZACIÓN ==================== -->
+<section id="reportes" class="cream-section">
+  <div class="section-inner">
+    <div class="tag reveal">Reportes · Automatización</div>
+    <h2 class="reveal">Top 10 posts LinkedIn · 2025.</h2>
+    <p class="lead reveal" style="color:#666; margin-bottom:8px;">8 de 10 posts de mayor performance involucran personas reales: CEO, VP, casos de fraude.</p>
+
+    <div class="reveal" style="overflow-x:auto; margin-top: 28px;">
+      <table class="posts-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Fecha</th>
+            <th>Idioma</th>
+            <th>Resumen</th>
+            <th>Impr.</th>
+            <th>Clics</th>
+            <th>Likes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="rank">1</td><td>01/07</td><td><span class="lang-badge">ES</span></td><td>Explorar el futuro de las finanzas — Carla Moroni Brunetti</td><td class="imp">3005</td><td>132</td><td>55</td></tr>
+          <tr><td class="rank">2</td><td>25/03</td><td><span class="lang-badge">ES</span></td><td>Explorar. Aprender. Compartir. VP Development & Innovation en LinkedIn</td><td class="imp">2622</td><td>93</td><td>54</td></tr>
+          <tr><td class="rank">3</td><td>05/05</td><td><span class="lang-badge">PT</span></td><td>Agradecemos ao portal Terra Brasil pela cobertura de VU</td><td class="imp">2500</td><td>59</td><td>135</td></tr>
+          <tr><td class="rank">4</td><td>15/08</td><td><span class="lang-badge">ES</span></td><td>Todo es posible con pasión. Tatiana Calderón, piloto internacional + VU</td><td class="imp">2490</td><td>152</td><td>77</td></tr>
+          <tr><td class="rank">5</td><td>14/07</td><td><span class="lang-badge">ES</span></td><td>Town Hall VU — miramos hacia adelante (537 clics, CTR 26%)</td><td class="imp">2055</td><td>537</td><td>59</td></tr>
+          <tr><td class="rank">6</td><td>05/11</td><td><span class="lang-badge">ES</span></td><td>Nuevo hito: propósito e innovación se encuentran — lanzamiento VU ONE</td><td class="imp">1993</td><td>65</td><td>69</td></tr>
+          <tr><td class="rank">7</td><td>17/10</td><td><span class="lang-badge">ES</span></td><td>Henry AI Conference: CEO Sebastián Stranieri redefine el futuro del trabajo</td><td class="imp">1881</td><td>52</td><td>45</td></tr>
+          <tr><td class="rank">8</td><td>14/10</td><td><span class="lang-badge">ES</span></td><td>Digital Identity Advisors — mundo digital más confiable (450 clics)</td><td class="imp">1828</td><td>450</td><td>54</td></tr>
+          <tr><td class="rank">9</td><td>16/04</td><td><span class="lang-badge">ES</span></td><td>Fortalecemos presencia en Brasil — ecosistema digital brasileño</td><td class="imp">1794</td><td>63</td><td>67</td></tr>
+          <tr><td class="rank">10</td><td>04/09</td><td><span class="lang-badge">ES</span></td><td>Fraude familiar — mujer estafada por su hija — caso real con alto impacto</td><td class="imp">1721</td><td>68</td><td>48</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap;">
+      <div style="background: white; border-radius:5px; padding: 10px 16px; border-left: 3px solid var(--coral);">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:var(--coral); margin-bottom:4px;">Insight</div>
+        <div style="font-size:13px; color:#555;">El contenido con personas reales genera 1.4× más impresiones que el institucional.</div>
+      </div>
+      <div style="background: white; border-radius:5px; padding: 10px 16px; border-left: 3px solid #3a9a5c;">
+        <div style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:2px; text-transform:uppercase; color:#3a9a5c; margin-bottom:4px;">Benchmark</div>
+        <div style="font-size:13px; color:#555;">ER orgánico VU 2025: 8.17% vs benchmark B2B 2–6%.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CLOSING ==================== -->
+<section id="closing">
+  <div class="section-inner" style="max-width: 760px; text-align: center;">
+    <div class="tag" style="color:white; border-color:rgba(255,255,255,0.4);">VU · 30 de Marzo 2026</div>
+    <h2 style="color:white; margin-top:16px;">Pipeline activo.<br>Latam en marcha.<br>Features en ejecución.</h2>
+  </div>
+</section>
+
+<script>
+// Scroll progress
+const sp = document.getElementById('scrollProgress');
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  sp.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100 + '%';
+});
+
+// Nav auto-hide
+let ls = 0;
+const nav = document.getElementById('mainNav');
+window.addEventListener('scroll', () => {
+  const c = window.pageYOffset;
+  if (c > ls && c > 100) nav.classList.add('hidden');
+  else nav.classList.remove('hidden');
+  ls = c;
+});
+
+// Active nav
+const secs = document.querySelectorAll('section[id]');
+const nls = document.querySelectorAll('.nav-links a');
+const o1 = new IntersectionObserver(es => {
+  es.forEach(e => {
+    if (e.isIntersecting) {
+      nls.forEach(l => l.classList.remove('active'));
+      const lk = document.querySelector(`.nav-links a[href="#${e.target.id}"]`);
+      if (lk) lk.classList.add('active');
+    }
+  });
+}, { threshold: 0.3 });
+secs.forEach(s => o1.observe(s));
+
+// Reveal on scroll
+const revs = document.querySelectorAll('.reveal');
+const o2 = new IntersectionObserver(es => {
+  es.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+revs.forEach(r => o2.observe(r));
+
+// Bar animations — triggered on section enter
+const o3 = new IntersectionObserver(es => {
+  es.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.bar-fill').forEach(b => {
+        setTimeout(() => { b.style.width = b.dataset.width + '%'; }, 200);
+      });
+      e.target.querySelectorAll('.fs-bar-fill').forEach(b => {
+        setTimeout(() => { b.style.width = b.dataset.width + '%'; }, 300);
+      });
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('section').forEach(s => o3.observe(s));
+
+// Smooth scroll nav
+document.querySelectorAll('.nav-links a').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) t.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+
+// Exec card toggle (touch)
+document.querySelectorAll('.exec-card').forEach(c => {
+  c.addEventListener('click', () => c.classList.toggle('open'));
+});
+</script>
+</body>
+</html>
