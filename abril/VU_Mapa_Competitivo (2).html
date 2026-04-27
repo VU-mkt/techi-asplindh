@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VU — Mapa Competitivo Completo</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #080816; }
+button { font-family: inherit; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #12122a; }
+::-webkit-scrollbar-thumb { background: #2a2a4a; border-radius: 3px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<script type="text/babel">
+const { useState } = React;
+
+
+
+const directCompetitors = {
+  metamap: {
+    name: "MetaMap (Incode)",
+    color: "#6C5CE7",
+    type: "Directo",
+    founded: "2018 (como Mati ID)",
+    hq: "San Francisco, USA",
+    funding: "$88.3M (adquirida por Incode Jun 2024)",
+    employees: "~55 (pre-adquisición)",
+    valuation: "Adquirida por Incode",
+    revenue: "No público",
+    clients: "Fortune 500, Allianz, Eversend, Wibond",
+    clientCount: "N/D",
+    regions: "LATAM fuerte, África, Europa (~15% awareness)",
+    model: "Suscripción + por verificación. $1K–$5K/mes. Custom quotes enterprise. Adquirida por Incode — futuro pricing incierto.",
+    products: ["KYC / AML Compliance", "Verificación de documentos", "Biometría facial", "Background checks", "Extracción bancaria", "Verificación de ingresos", "Government checks LATAM", "Custom form builder"],
+    strengths: ["Fuerte en LATAM con datos regionales", "Respaldada por Incode (líder global)", "SDK flexible (React Native)", "Templates pre-diseñados"],
+    weaknesses: ["Adquirida — marca en transición", "Precios no transparentes", "Bugs frecuentes reportados", "Alta rotación de account managers", "Analytics limitado"],
+    target: "Fintechs, neobancos, crédito en LATAM/África. SMB a enterprise.",
+    messaging: "Plataforma de verificación basada en datos regionales, consolidada globalmente.",
+    style: "Corporativo accesible. Morados/azules. Bilingüe EN/ES.",
+    content: ["Blog compliance/KYC", "Customer stories", "Webinars regulación", "Docs técnicos"],
+    linkedin: "Educativo, compliance tips. 3-4 posts/semana.",
+    linkedinFollowers: "~15K",
+    events: "iFX EXPO, LATAM fintech events",
+    channels: [
+      { name: "LinkedIn", url: "https://www.linkedin.com/company/metamapid/", followers: "~15K" },
+      { name: "Web", url: "https://metamap.com", followers: null },
+      { name: "Twitter/X", url: "https://x.com/MetaMapid", followers: "~8K" },
+      { name: "YouTube", url: "https://www.youtube.com/@metamap", followers: "~1K" },
+    ],
+    awards: [
+      { year: "2024", award: "Adquirida por Incode Technologies (líder global IDV)" },
+      { year: "2023", award: "Reconocida como alternativa líder en LATAM para KYC" },
+    ],
+    vuDiff: "MetaMap = verificación puntual. VU = infraestructura de identidad completa. MetaMap fue adquirida — incertidumbre de roadmap. VU tiene 18 años vs 6 de MetaMap.",
+    threat: "Respaldada por Incode. Si consolidan bien, suite más completa. Foco LATAM+África compite directo.",
+    opportunity: "Marca en transición, clientes evaluando alternativas. Bugs y rotación crean ventana de captura.",
+  },
+  sumsub: {
+    name: "Sumsub",
+    color: "#00B894",
+    type: "Directo",
+    founded: "2015",
+    hq: "Londres, UK",
+    funding: "$36.7M",
+    employees: "500+",
+    valuation: "No público",
+    revenue: "~$120M (FY2025 est.)",
+    clients: "Bitpanda, Wirex, Avis, Bybit, Vodafone, Duolingo, Kaizen Gaming, TransferGo",
+    clientCount: "4,000+",
+    regions: "Global — UK, Europa, APAC, LATAM, Middle East",
+    model: "Suscripción por tiers + fees por verificación. Bundling all-in-one. Mid-market ARR ~$18K.",
+    products: ["KYC / KYB Verification", "AML Screening & Monitoring", "Transaction Monitoring", "Fraud Prevention (deepfake)", "14,000+ documentos", "No-code workflow builder", "Summy AI Copilot (2026)", "Reusable verification", "Travel Rule solution"],
+    strengths: ["Gartner MQ Leader 2024+2025", "220+ países, 14K docs", "All-in-one platform", "Conversión 91-97%", "<50s verificación", "$120M revenue", "Marketing innovador", "Forrester TEI: 240% ROI"],
+    weaknesses: ["Sin integración gov. directa LATAM", "Alto costo cloud ($48M/año)", "Switching costs bajos (48% churn 18m)", "Sin deployment on-prem"],
+    target: "Fintech, crypto, gaming, trading, e-commerce, transporte. Mid-market a enterprise global.",
+    messaging: "Full-cycle verification. Seguridad del journey completo. Compliance global simplificado.",
+    style: "Verde vibrante. Bold y disruptivo. Usa humor en campañas (The Beast).",
+    content: ["Identity Fraud Report (citado por Interpol/ONU)", "State of Crypto report", "Compliance Digest mensual", "Campañas de video creativos", "Blog técnico + thought leadership"],
+    linkedin: "Muy activo. Humor + thought leadership + datos. 5-7 posts/semana.",
+    linkedinFollowers: "~80K+",
+    events: "TOKEN2049, Money20/20, SiGMA, iFX EXPO, eventos propios Multiverse",
+    channels: [
+      { name: "LinkedIn", url: "https://www.linkedin.com/company/sumsub/", followers: "~80K+" },
+      { name: "Web", url: "https://sumsub.com", followers: null },
+      { name: "Twitter/X", url: "https://x.com/Sumsub", followers: "~25K" },
+      { name: "YouTube", url: "https://www.youtube.com/@SumsubVerification", followers: "~5K" },
+      { name: "Instagram", url: "https://www.instagram.com/sumsubers/", followers: "~3K" },
+    ],
+    awards: [
+      { year: "2025", award: "Gartner MQ Leader — Identity Verification (2do año, #1 en Vision)" },
+      { year: "2025", award: "Forrester Wave Leader — Identity Verification Solutions Q3" },
+      { year: "2024", award: "Gartner MQ Leader — 1er Magic Quadrant de Identity Verification" },
+      { year: "2024", award: "Gartner Emerging Tech: GenAI Security — Representative Vendor" },
+      { year: "2023-24", award: "Premios de ICA, Sigma, Forrester" },
+      { year: "2022", award: "Forrester TEI Study — 240% ROI validado" },
+    ],
+    vuDiff: "Sumsub = cobertura global ancha pero no profunda en LATAM. VU = 18 años de relaciones gubernamentales irreplicables. No deployment on-prem (requisito gov). Fraud ML de Sumsub entrenado globalmente; VU con patrones reales LATAM.",
+    threat: "Competidor más peligroso. $120M revenue, Gartner Leader, 4K+ clientes. Marketing innovador con budget 5-10x mayor.",
+    opportunity: "Sin integraciones gov. directas LATAM. Sin on-prem. No puede replicar 18 años de relaciones institucionales.",
+  },
+  veriff: {
+    name: "Veriff",
+    color: "#1A73E8",
+    type: "Directo",
+    founded: "2015",
+    hq: "Tallin, Estonia",
+    funding: "$200M (Series C)",
+    employees: "524+",
+    valuation: "$1.5B (unicornio 2022)",
+    revenue: "€36.1M (2022), 75% growth Q4 2024",
+    clients: "Deel, Bolt, Wise, Wolt, JTI, MassPay",
+    clientCount: "Miles (N/D exacto)",
+    regions: "Norte América ~40%, Europa ~40%, LATAM/SEA en expansión",
+    model: "SaaS volume-based. $1–$3.50/verificación. 75% de revenue transaccional. Add-ons: PoA, PEP, Re-verification.",
+    products: ["Identity Verification (video-first)", "Biometric Authentication", "Proof of Address", "AML Screening", "Age Estimation", "Device fingerprinting", "Re-verification (2025)", "Reusable digital IDs (roadmap 2026)"],
+    strengths: ["Unicornio $1.5B — Tiger Global, Accel, YC", "Video-first approach (+1,000 data points)", "98% automation rate", "12K+ docs, 230+ países", "NRR >120%", "Hub São Paulo 2025 para LATAM", "iBeta Level 2 liveness"],
+    weaknesses: ["Precio alto para mid-market", "Point solution (no TM, no CIAM)", "Revenue menor que Sumsub", "LATAM es nuevo — sin relaciones gov.", "Riesgo Big Tech wallets"],
+    target: "Fintechs, marketplaces, gaming, mobility, financial services. Enterprise-focused.",
+    messaging: "AI-powered IDV. Trust & safety online. Video-first para máxima precisión.",
+    style: "Limpio, azul/verde profesional. Enterprise serio. Énfasis en datos.",
+    content: ["UK Fraud Pulse Survey", "Identity Fraud Report", "Case studies por industria", "Developer docs abiertos"],
+    linkedin: "Profesional/técnico. Case studies, product updates. 4-5/semana.",
+    linkedinFollowers: "~50K+",
+    events: "Money20/20, Web Summit, Fintech Americas",
+    channels: [
+      { name: "LinkedIn", url: "https://www.linkedin.com/company/veriff/", followers: "~50K+" },
+      { name: "Web", url: "https://veriff.com", followers: null },
+      { name: "Twitter/X", url: "https://x.com/Veriff", followers: "~12K" },
+      { name: "YouTube", url: "https://www.youtube.com/@Veriff", followers: "~2K" },
+    ],
+    awards: [
+      { year: "2025", award: "CyberSecurity Breakthrough — Fraud Prevention Solution of the Year" },
+      { year: "2025", award: "G2 Leader — Identity Verification Grid" },
+      { year: "2025", award: "Chartis Research — Category Leader in Accessibility" },
+      { year: "2024", award: "iBeta Level 2 Biometric Liveness Detection compliance" },
+      { year: "2022", award: "Unicornio — $1.5B valuation (Tiger Global, Alkeon)" },
+      { year: "2018", award: "Y Combinator graduate" },
+    ],
+    vuDiff: "Veriff = point solution (identity proofing) vs VU ONE = plataforma completa. Veriff cobra por verificación; VU ofrece identidad reutilizable. Veriff nuevo en LATAM; VU lleva 18 años.",
+    threat: "Unicornio con deep pockets. Hub São Paulo = intención clara LATAM. NRR >120%. Movimiento hacia ID reutilizable.",
+    opportunity: "Nuevo en LATAM, sin relaciones gov., point solution que necesita otros vendors. Precio escala costoso.",
+  },
+};
+
+const indirectCompetitors = {
+  jumio: {
+    name: "Jumio",
+    color: "#E84393",
+    type: "Indirecto — Prevención de Fraude",
+    founded: "2010",
+    hq: "Sunnyvale, California, USA",
+    funding: "$196M (Centana Growth Partners)",
+    employees: "618+",
+    valuation: "Adquirida por Centana (PE)",
+    revenue: "~$100M+ (2020), $200M+ bookings (2025)",
+    clients: "HSBC, Airbnb, Coinbase, United Airlines, Instacart",
+    clientCount: "Cientos (enterprise)",
+    regions: "Global — NA, LATAM, Europa, APAC, Middle East",
+    model: "Enterprise SaaS. Pricing por verificación. No-code orchestration + datos de terceros. Backed by PE (foco en rentabilidad).",
+    products: ["KYX Platform (end-to-end)", "Identity Proofing", "AML/KYC Compliance", "Transaction Monitoring", "Fraud Prevention", "5,000+ tipos de ID", "Biometrics + liveness", "No-code orchestration"],
+    strengths: ["1B+ transacciones procesadas", "5K+ tipos de ID, 200+ países", "Gartner MQ Leader 2024", "QKS SPARK Matrix Leader 2025", "Pionero en ID + selfie", "Backed by PE — estabilidad"],
+    weaknesses: ["Ownership PE — menor agilidad innovación", "Precio enterprise alto", "Compite con FaceTec en patentes liveness", "Sin foco LATAM profundo como VU"],
+    target: "Financial services, gaming, retail, telco, sharing economy. Enterprise global.",
+    messaging: "AI-powered identity verification. Fight fraud, onboard faster, meet compliance.",
+    style: "Corporativo enterprise, azul/naranja. Tono serio y confiable.",
+    content: ["Annual Identity Fraud Reports", "Case studies enterprise", "Whitepapers compliance", "Webinars"],
+    linkedin: "Enterprise-focused. Product updates, awards. 3-4/semana.",
+    linkedinFollowers: "~40K+",
+    events: "Money20/20, RSA Conference, Identity Week",
+    channels: [
+      { name: "LinkedIn", url: "https://www.linkedin.com/company/jumio/", followers: "~40K+" },
+      { name: "Web", url: "https://jumio.com", followers: null },
+      { name: "Twitter/X", url: "https://x.com/jumio", followers: "~10K" },
+      { name: "YouTube", url: "https://www.youtube.com/@JumioCorporation", followers: "~2K" },
+    ],
+    awards: [
+      { year: "2025", award: "QKS SPARK Matrix Leader — Identity Capture & Verification" },
+      { year: "2025", award: "Superó $200M en bookings de identity proofing" },
+      { year: "2024", award: "Gartner MQ Leader — Identity Verification" },
+      { year: "2024", award: "Global InfoSec Award — IDV Market Leader" },
+      { year: "2018", award: "FinTech Breakthrough — Best Fraud Prevention Platform" },
+      { year: "2018", award: "Cyber Defense Magazine — Cutting Edge Biometrics" },
+    ],
+    vuDiff: "Jumio = enterprise IDV global, fuerte en NA/Europa. VU = profundidad LATAM + infraestructura gov. Jumio no tiene CIAM ni identity reutilizable.",
+    threat: "Escala masiva (1B+ txns), respaldo PE, Gartner Leader. Cliente overlap (HSBC usa ambos).",
+    opportunity: "PE ownership limita agilidad. Sin profundidad regulatoria LATAM. Pricing enterprise los excluye de mid-market.",
+  },
+  facephi: {
+    name: "Facephi",
+    color: "#FDCB6E",
+    type: "Indirecto — Verificación de Identidad",
+    founded: "2012",
+    hq: "Alicante, España",
+    funding: "Pública (BME Growth + Euronext Growth)",
+    employees: "200+",
+    valuation: "Cotiza en bolsa (~€40M market cap est.)",
+    revenue: "€28.9M (2024), €12.6M H1 2025",
+    clients: "Banco Santander, Efectivo Sí, bancos LATAM/APAC, gobiernos",
+    clientCount: "30+ países",
+    regions: "España, LATAM fuerte, APAC en expansión, EMEA creciente",
+    model: "Licencias recurrentes (anual/mensual) + cloud + soporte. Licencias perpetuas/específicas. Dual-listing BME/Euronext.",
+    products: ["Facephi Identity Platform", "Multi-biometric verification", "Deepfake detection", "Behavioural biometrics", "Mule account detection", "KYP (Know Your Passenger)", "Digital identity wallets", "Anti-fraud ecosystem (con Eastnets)"],
+    strengths: ["13+ años en biometría", "Cotiza en bolsa — transparencia", "Fuerte en banking LATAM y APAC", "Alianza Eastnets (800+ instituciones)", "Revenue creciendo 15% YoY", "Primer FCF positivo 2025"],
+    weaknesses: ["Market cap pequeña (~€40M)", "EBITDA negativo hasta 2025", "Liquidez ajustada", "Menos brand awareness global que Sumsub/Veriff", "Dependencia de LATAM"],
+    target: "Banca, fintech, seguros, gaming, aerolíneas, gobierno. Mid-market a enterprise.",
+    messaging: "360° identity & anti-fraud platform. Seguridad sin fricciones.",
+    style: "Profesional español/europeo. Azules corporativos. Tono regulatorio-técnico.",
+    content: ["Fraud Intelligence Report 2025", "Investor Day presentations", "Blog técnico", "DIACC contributions"],
+    linkedin: "Corporativo, investor-focused, product updates. 3-4/semana.",
+    linkedinFollowers: "~20K+",
+    events: "Scientific forums, Identity conferences, LATAM banking",
+    channels: [
+      { name: "LinkedIn", url: "https://www.linkedin.com/company/facephi/", followers: "~20K+" },
+      { name: "Web", url: "https://facephi.com", followers: null },
+      { name: "Twitter/X", url: "https://x.com/FacePhi", followers: "~5K" },
+      { name: "YouTube", url: "https://www.youtube.com/@facephi", followers: "~1K" },
+    ],
+    awards: [
+      { year: "2025", award: "Gartner Market Guide — Vendor representativo Identity Verification" },
+      { year: "2025", award: "Primer FCF positivo en la historia de la compañía" },
+      { year: "2022", award: "Revenue récord histórico, EBITDA positivo €4.31M" },
+      { year: "2021", award: "Premio Alfil — Internacionalización" },
+      { year: "2021", award: "Forinvest Award — CEO trayectoria empresarial" },
+      { year: "2019", award: "IPO en BME Growth" },
+    ],
+    vuDiff: "Facephi = biometría y anti-fraude focalizado. VU = plataforma de identidad completa. Facephi no tiene CIAM, RENAPER, ni AI Agent Identity. Competencia parcial en banca LATAM.",
+    threat: "Fuerte en banca LATAM con Santander. Alianza Eastnets amplía su alcance a 800+ instituciones. Cotiza en bolsa = credibilidad.",
+    opportunity: "Market cap chica, liquidez ajustada. VU tiene ventaja en gov. y CIAM. Facephi es complementario a VU, no reemplazo.",
+  },
+  facetec: {
+    name: "FaceTec",
+    color: "#636E72",
+    type: "Indirecto — Verificación de Identidad",
+    founded: "2013",
+    hq: "Las Vegas, Nevada, USA",
+    funding: "$4M (seed)",
+    employees: "~50",
+    valuation: "Privada, no disponible",
+    revenue: "No público",
+    clients: "Bancos, gobiernos, e-commerce, social networks (6 continentes)",
+    clientCount: "N/D (3.7B+ liveness checks/año)",
+    regions: "Global — 6 continentes",
+    model: "Licencia de software SDK. On-premise o cloud. Free updates para clientes existentes. Modelo de componente (se integra en otras plataformas).",
+    products: ["3D Liveness Detection (Level 1-5)", "3D Face Matching", "UR Codes (identity protocol)", "Photo ID OCR", "Age Estimation", "NFC chip scanning", "$600K Spoof Bounty Program"],
+    strengths: ["Líder mundial en 3D liveness detection", "0% APCER en Level 1-5 (único)", "$600K spoof bounty — confianza extrema", "3.7B+ liveness checks anualizados", "Patentes propias", "Version 10 — mejora continua"],
+    weaknesses: ["Componente, no plataforma completa", "Mínimo funding ($4M)", "Empresa chica (~50 personas)", "En disputa de patentes con Jumio", "No hace KYC/AML/compliance"],
+    target: "Vendors de IDV, bancos, gobiernos, social networks. Se integra en otras plataformas.",
+    messaging: "Global standard for 3D Liveness and Face Matching. Security-first.",
+    style: "Técnico/security-focused. Sin florituras. Enfoque en certificaciones y testing.",
+    content: ["Liveness Detection Security Reports", "Third-party lab test results", "Whitepapers técnicos", "Educational (liveness.com)"],
+    linkedin: "Técnico, security-first, certificaciones. 2-3/semana.",
+    linkedinFollowers: "~5K",
+    events: "Identity Week Europe/America (Title Sponsor)",
+    channels: [
+      { name: "LinkedIn", url: "https://www.linkedin.com/company/facetec-inc/", followers: "~5K" },
+      { name: "Web", url: "https://facetec.com", followers: null },
+      { name: "Liveness.com", url: "https://liveness.com", followers: null },
+      { name: "Twitter/X", url: "https://x.com/FaceTecInc", followers: "~2K" },
+    ],
+    awards: [
+      { year: "2025", award: "Primer vendor en pasar Level 1-5 PAD + IAD (0% APCER)" },
+      { year: "2025", award: "Level 4 Spoof/Bypass — Praetorian Security (0% APCER)" },
+      { year: "2025", award: "Profiled in 2025 Face Liveness Market Buyer's Guide" },
+      { year: "2025", award: "FaceTec v10 release — upgrade mayor" },
+      { year: "2025", award: "Title Sponsor Identity Week Europe + America" },
+      { year: "2019", award: "Lanzamiento Spoof Bounty Program ($100K→$600K)" },
+    ],
+    vuDiff: "FaceTec = componente de liveness/matching. VU = plataforma completa. No compiten directamente — FaceTec podría ser proveedor complementario para VU.",
+    threat: "Si un competidor directo integra FaceTec, mejora su liveness dramatically. Patentes podrían limitar opciones de VU.",
+    opportunity: "Partnership potencial. FaceTec necesita plataformas como VU para llegar al cliente final.",
+  },
+  auth0: {
+    name: "Auth0 (Okta)",
+    color: "#EB5424",
+    type: "Indirecto — Autenticación",
+    founded: "2013 (adquirida por Okta 2021, $6.5B)",
+    hq: "San Francisco (Okta HQ)",
+    funding: "$6.5B adquisición por Okta",
+    employees: "Part of Okta (6,000+ total)",
+    valuation: "Parte de Okta (NASDAQ: OKTA, ~$15B)",
+    revenue: "~$1B ARR (Auth0 dentro de Okta). Okta total: $2.6B FY2025",
+    clients: "19,000+ (Okta total). SaaS companies, fintechs, enterprises",
+    clientCount: "19,000+ orgs (Okta total)",
+    regions: "Global — NA primario, EMEA, APAC",
+    model: "SaaS suscripción. Free tier + Enterprise custom. Developer-first pricing. Okta entry: $1,500+.",
+    products: ["Customer Identity Cloud (CIAM)", "SSO / MFA / Passwordless", "Auth for GenAI (AI agents)", "Universal Login", "Identity Governance", "7,000+ integraciones pre-built", "OAuth/OIDC/SAML", "Adaptive MFA + Bot Detection"],
+    strengths: ["Parte de Okta — $2.6B revenue, NASDAQ", "40.94% market share IAM", "Developer-first, SDKs flexibles", "7K+ integraciones", "Gartner Leader IAM 8 años", "Auth for GenAI (AI agents)", "Escala masiva"],
+    weaknesses: ["CIAM puro — no hace IDV, KYC, ni AML", "No tiene biometría ni verificación de documentos", "Precio alto para enterprise", "Complejidad post-adquisición", "No tiene fraud prevention real"],
+    target: "Developers, SaaS companies, enterprise. Workforce IAM + Customer IAM.",
+    messaging: "Flexible, secure access for customers, workforce, and AI agents.",
+    style: "Developer-first. Naranja/negro. Técnico pero accesible. Docs excelentes.",
+    content: ["Businesses at Work Report (anual)", "Auth0 Blog (developer community)", "Oktane conference", "Security reports"],
+    linkedin: "Developer community, product launches, thought leadership. 5-7/semana.",
+    linkedinFollowers: "~200K+ (Okta total)",
+    events: "Oktane, RSA Conference, developer conferences globales",
+    channels: [
+      { name: "LinkedIn (Okta)", url: "https://www.linkedin.com/company/okta-inc-/", followers: "~200K+" },
+      { name: "LinkedIn (Auth0)", url: "https://www.linkedin.com/company/auth0/", followers: "~80K+" },
+      { name: "Web Okta", url: "https://okta.com", followers: null },
+      { name: "Web Auth0", url: "https://auth0.com", followers: null },
+      { name: "Twitter/X", url: "https://x.com/okta", followers: "~60K" },
+      { name: "GitHub", url: "https://github.com/auth0", followers: "~15K" },
+      { name: "YouTube", url: "https://www.youtube.com/@OktaDev", followers: "~20K" },
+    ],
+    awards: [
+      { year: "2025", award: "SC Award — Best Identity Management Solution" },
+      { year: "2024", award: "KuppingerCole — Overall Leader CIAM Platforms" },
+      { year: "2024", award: "AWS Global Marketplace Partner of the Year" },
+      { year: "2024", award: "Google Cloud Technology Partner of the Year" },
+      { year: "2017-2024", award: "Gartner MQ Leader — Access Management (8 años)" },
+      { year: "2021", award: "Forrester Wave — Highest Score IDaaS for Enterprise" },
+      { year: "2021", award: "Adquirida por Okta por $6.5B" },
+    ],
+    vuDiff: "Auth0/Okta = autenticación/CIAM puro. VU = identity verification + CIAM + fraud + gov. Auth0 no verifica identidad, no hace KYC/AML. VU y Auth0 son complementarios en muchos casos, pero VU ONE incluye CIAM nativo.",
+    threat: "Escala masiva ($2.6B). Si agregan IDV/KYC, serían competidor devastador. Auth for GenAI compite con AI Agent Identity de VU.",
+    opportunity: "No hacen IDV — partnership potencial. VU puede posicionarse como el layer de identity verification que Auth0 no tiene.",
+  },
+};
+
+const vuFull = {
+  name: "VU",
+  color: "#F15E37",
+  type: "VU Security",
+  founded: "2007",
+  hq: "Buenos Aires, Argentina",
+  funding: "$16.8M (Series A + B)",
+  employees: "180+",
+  valuation: "No público",
+  revenue: "$16.5M",
+  clients: "HSBC, RENAPER, Falabella, Prisma, BetWarrior, Openbank, Banco Argentino, ANSES, Mi Argentina",
+  clientCount: "170+ empresas y gobiernos",
+  regions: "30+ países — LATAM primario, EMEA, US",
+  model: "Plataforma SaaS/PaaS/IaaS/On-prem. Contratos enterprise + gobierno. Identity as infrastructure: verify once, identity as an asset. Deployment flexible según requerimiento del cliente.",
+  products: ["VU ONE — Plataforma unificada", "CIAM (Customer Identity & Access Management)", "Authentication Management (TOTP, biometría, Magic Link)", "Onboarding Management (KYC + OCR)", "Fraud Analysis (multichannel, ML real LATAM)", "Identity Link (NoCode, 72h a producción)", "AI Agent Identity (delegación verificable)", "Integración RENAPER + 8 gobiernos LATAM"],
+  strengths: ["18 años de operación — desde 2007", "RENAPER: infraestructura nacional para 46M argentinos", "Integraciones gov. directas en 8 países LATAM", "Microsoft Partner of the Year #1 x4 (2019-2022)", "Gartner Market Guide — único vendor LATAM", "72h a producción (caso BetWarrior)", "Deployment flexible: SaaS/PaaS/On-prem/Docker/K8s", "AI Agent Identity — frontera diferenciadora", "Fraud ML entrenado con patrones reales LATAM"],
+  weaknesses: ["Revenue $16.5M vs competidores con $100M+", "Brand awareness menor fuera de LATAM", "Funding acumulado $16.8M vs $200M de Veriff", "Content marketing por debajo de Sumsub/Veriff", "Sin premios tipo Gartner MQ Leader o Forrester Wave"],
+  target: "Financial Services, Gobierno, Gaming/Gambling en LATAM, EMEA, US. Enterprise y gobierno a nivel de infraestructura nacional.",
+  messaging: "La infraestructura de identidad que solo pudo haberse construido desde América Latina. 18 años. 350M+ usuarios. 30+ países.",
+  style: "Dark-first, VU Orange (#F15E37) como acento. Directo y confiado. Specifico > genérico. Heritage LATAM como ventaja, no limitación.",
+  content: ["Case studies con números exactos (BetWarrior, HSBC, Falabella)", "About VU deck", "Product datasheets", "Contenido técnico/regulatorio"],
+  linkedin: "Contenido institucional, casos de éxito, eventos. Frecuencia a mejorar vs competencia.",
+  linkedinFollowers: "~10K",
+  events: "Fintech Americas, eventos LATAM regionales, Microsoft events",
+  channels: [
+    { name: "LinkedIn", url: "https://www.linkedin.com/company/vusecurity/", followers: "~10K" },
+    { name: "Web", url: "https://vusecurity.com", followers: null },
+    { name: "Twitter/X", url: "https://x.com/VUsecurity", followers: "~5K" },
+    { name: "Instagram", url: "https://www.instagram.com/vusecurity/", followers: "~3K" },
+    { name: "YouTube", url: "https://www.youtube.com/@VUSecurity", followers: "~1K" },
+  ],
+  awards: [
+    { year: "2019-2022", award: "Microsoft Partner of the Year #1 (4 años consecutivos)" },
+    { year: "2024", award: "Gartner Market Guide — Representative Vendor en Identity Verification (único LATAM)" },
+    { year: "2021-23", award: "Series B — $12.3M global" },
+    { year: "Ongoing", award: "Great Place to Work certified" },
+    { year: "Ongoing", award: "Employer for Youth" },
+    { year: "Ongoing", award: "Santander X" },
+  ],
+  vuDiff: "—",
+  threat: "—",
+  opportunity: "—",
+};
+
+const allCompetitors = { vu: vuFull, ...directCompetitors, ...indirectCompetitors };
+
+const vu = vuFull;
+
+const vu = {
+  name: "VU",
+  color: "#F15E37",
+  founded: "2007",
+  hq: "Buenos Aires, Argentina",
+  funding: "$16.8M (Series A + B)",
+  employees: "180+",
+  revenue: "$16.5M",
+  clientCount: "170+",
+  regions: "30+ países — LATAM, EMEA, US",
+  products: ["VU ONE Platform", "CIAM", "Authentication Management", "Onboarding/KYC", "Fraud Analysis", "Identity Link", "AI Agent Identity", "RENAPER + 8 gov."],
+  awards: [
+    { year: "2019-2022", award: "Microsoft Partner of the Year #1 (4 años consecutivos)" },
+    { year: "2024", award: "Gartner Market Guide — Representative Vendor en Identity Verification (único LATAM)" },
+    { year: "2021-23", award: "Series B — $12.3M global" },
+    { year: "Ongoing", award: "Great Place to Work certified" },
+    { year: "Ongoing", award: "Employer for Youth" },
+    { year: "Ongoing", award: "Santander X" },
+  ],
+};
+
+const matrixDims = [
+  { label: "Profundidad LATAM", id: "latam", def: "Nivel de penetración, relaciones institucionales, integraciones regulatorias y tiempo de operación en América Latina. Considera clientes activos en la región, integraciones con registros civiles/gobierno, conocimiento regulatorio local y años de presencia.", vu: 10, metamap: 7, sumsub: 5, veriff: 3, jumio: 5, facephi: 7, facetec: 3, auth0: 3 },
+  { label: "Cobertura Global", id: "global", def: "Cantidad de países, idiomas, tipos de documentos soportados y presencia de oficinas/equipos comerciales a nivel mundial. No solo si 'aceptan' un país, sino si tienen operación real, soporte local y cumplimiento regulatorio.", vu: 6, metamap: 6, sumsub: 10, veriff: 9, jumio: 9, facephi: 5, facetec: 8, auth0: 10 },
+  { label: "Integración Gov.", id: "gov", def: "Contratos directos con gobiernos, integración con registros civiles nacionales (ej: RENAPER), participación en infraestructura de identidad nacional, y confianza institucional demostrada a nivel estatal.", vu: 10, metamap: 3, sumsub: 2, veriff: 1, jumio: 3, facephi: 4, facetec: 4, auth0: 1 },
+  { label: "Suite Completa", id: "suite", def: "Amplitud del portafolio de productos en una sola plataforma: cubre verificación de identidad, CIAM, autenticación, fraud prevention, transaction monitoring, KYB, y compliance. Cuanto más necesite integrarse con terceros, menor puntaje.", vu: 9, metamap: 5, sumsub: 9, veriff: 5, jumio: 8, facephi: 6, facetec: 3, auth0: 7 },
+  { label: "Scale (Revenue)", id: "scale", def: "Tamaño del negocio medido por revenue anual, cantidad de clientes, volumen de transacciones procesadas, y capacidad financiera para invertir en crecimiento. Benchmark: Auth0/Okta $2.6B = 10, VU $16.5M = 3.", vu: 3, metamap: 2, sumsub: 10, veriff: 5, jumio: 8, facephi: 3, facetec: 1, auth0: 10 },
+  { label: "Brand Awareness", id: "brand", def: "Reconocimiento de marca en el mercado de identity verification. Medido por: seguidores LinkedIn, menciones en medios especializados, presencia en eventos tier-1, y percepción entre buyers del mercado.", vu: 4, metamap: 4, sumsub: 9, veriff: 8, jumio: 7, facephi: 4, facetec: 3, auth0: 10 },
+  { label: "Deployment Flex.", id: "deploy", def: "Flexibilidad de despliegue: ofrece SaaS multitenant, PaaS, IaaS, on-premise, Docker/Kubernetes, híbrido. Fundamental para clientes de gobierno y banca que requieren datos en su propia infraestructura.", vu: 10, metamap: 4, sumsub: 4, veriff: 3, jumio: 4, facephi: 6, facetec: 9, auth0: 7 },
+  { label: "AI Agent Identity", id: "ai", def: "Capacidad de autenticar y gestionar identidades de agentes de IA que actúan en nombre de personas. Incluye: delegación verificable, trazabilidad de acciones del agente, y políticas de atributos por identidad.", vu: 8, metamap: 0, sumsub: 2, veriff: 2, jumio: 1, facephi: 1, facetec: 0, auth0: 6 },
+  { label: "Content Marketing", id: "content", def: "Calidad y volumen de contenido publicado: blogs, reportes de investigación, webinars, presencia en redes sociales, thought leadership. Evalúa si generan contenido que posiciona la marca como referente de la industria.", vu: 4, metamap: 4, sumsub: 10, veriff: 8, jumio: 7, facephi: 5, facetec: 3, auth0: 9 },
+  { label: "Premios/Analistas", id: "awards_score", def: "Reconocimientos de analistas independientes de primer nivel: Gartner Magic Quadrant, Forrester Wave, SPARK Matrix, KuppingerCole. No incluye premios auto-nominados ni de medios menores. Peso mayor = Gartner MQ Leader.", vu: 5, metamap: 3, sumsub: 10, veriff: 7, jumio: 8, facephi: 5, facetec: 6, auth0: 10 },
+];
+
+const matrixPlayers = [
+  { key: "vu", color: "#F15E37", label: "VU" },
+  { key: "sumsub", color: "#00B894", label: "Sumsub" },
+  { key: "veriff", color: "#1A73E8", label: "Veriff" },
+  { key: "jumio", color: "#E84393", label: "Jumio" },
+  { key: "auth0", color: "#EB5424", label: "Auth0" },
+  { key: "metamap", color: "#6C5CE7", label: "MetaMap" },
+  { key: "facephi", color: "#FDCB6E", label: "Facephi" },
+  { key: "facetec", color: "#636E72", label: "FaceTec" },
+];
+
+const sections = [
+  { id: "overview", label: "Overview" },
+  { id: "business", label: "Modelo" },
+  { id: "products", label: "Productos" },
+  { id: "clients", label: "Target" },
+  { id: "marketing", label: "Marketing" },
+  { id: "awards", label: "Premios" },
+  { id: "swot", label: "SWOT vs VU" },
+  { id: "matrix", label: "Matriz" },
+];
+
+function Badge({ children, color }) {
+  return <span style={{ display: "inline-block", padding: "2px 8px", borderRadius: "12px", fontSize: "10px", fontWeight: 600, background: color + "18", color, border: `1px solid ${color}40`, margin: "2px" }}>{children}</span>;
+}
+
+function Card({ children, style: s }) {
+  return <div style={{ background: "#12122a", borderRadius: "10px", padding: "14px", ...s }}>{children}</div>;
+}
+
+function Label({ children, color }) {
+  return <div style={{ fontSize: "11px", color: color || "#8892b0", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "8px" }}>{children}</div>;
+}
+
+function Metric({ label, value, color }) {
+  return (
+    <div style={{ background: "#12122a", borderRadius: "8px", padding: "10px 12px", borderLeft: `3px solid ${color}`, flex: 1, minWidth: "130px" }}>
+      <div style={{ fontSize: "10px", color: "#6a7a9a", textTransform: "uppercase" }}>{label}</div>
+      <div style={{ fontSize: "15px", fontWeight: 700, color: "#e6f1ff", marginTop: "2px" }}>{value}</div>
+    </div>
+  );
+}
+
+function ListItems({ items, color, icon }) {
+  return items.map((item, i) => (
+    <div key={i} style={{ color: "#a8b2d1", fontSize: "12px", marginBottom: "5px", paddingLeft: "10px", borderLeft: `2px solid ${color}30` }}>{item}</div>
+  ));
+}
+
+function App() {
+  const [activeComp, setActiveComp] = useState("vu");
+  const [activeSection, setActiveSection] = useState("overview");
+  const [expandedDim, setExpandedDim] = useState(null);
+  const comp = allCompetitors[activeComp];
+  const isVU = activeComp === "vu";
+
+  return (
+    <div style={{ fontFamily: "'DM Sans', system-ui, sans-serif", background: "#080816", minHeight: "100vh", color: "#ccd6f6", padding: "16px" }}>
+      <div style={{ maxWidth: "920px", margin: "0 auto" }}>
+        {/* Header */}
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "4px" }}>
+          <div style={{ width: "28px", height: "28px", borderRadius: "6px", background: "#F15E37", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: "12px", color: "white" }}>VU</div>
+          <h1 style={{ fontSize: "18px", fontWeight: 700, color: "#e6f1ff", margin: 0 }}>Mapa Competitivo Completo</h1>
+        </div>
+        <p style={{ fontSize: "11px", color: "#4a5a7a", margin: "0 0 16px 0" }}>Directos: MetaMap, Sumsub, Veriff · Indirectos: Jumio, Facephi, FaceTec, Auth0/Okta</p>
+
+        {/* Competitor Tabs — All together */}
+        <div style={{ display: "flex", gap: "2px", marginBottom: "12px", borderBottom: "1px solid #1a1a3a", overflowX: "auto" }}>
+          {Object.entries(allCompetitors).map(([key, c]) => (
+            <button key={key} onClick={() => setActiveComp(key)}
+              style={{ padding: "8px 14px", border: "none", cursor: "pointer", fontSize: "12px", fontWeight: activeComp === key ? 700 : 400, background: activeComp === key ? c.color + "15" : "transparent", color: activeComp === key ? c.color : "#6a7a9a", borderBottom: activeComp === key ? `2px solid ${c.color}` : "2px solid transparent", whiteSpace: "nowrap", borderRadius: "6px 6px 0 0" }}>
+              {c.name}
+            </button>
+          ))}
+        </div>
+
+        {/* Section Nav */}
+        <div style={{ display: "flex", gap: "3px", flexWrap: "wrap", marginBottom: "14px" }}>
+          {sections.map((s) => (
+            <button key={s.id} onClick={() => setActiveSection(s.id)}
+              style={{ padding: "4px 10px", borderRadius: "14px", border: activeSection === s.id ? "1px solid #F15E37" : "1px solid #1a1a3a", background: activeSection === s.id ? "#F15E3715" : "transparent", color: activeSection === s.id ? "#F15E37" : "#6a7a9a", cursor: "pointer", fontSize: "11px", fontWeight: activeSection === s.id ? 600 : 400 }}>
+              {s.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Type Badge */}
+        <div style={{ marginBottom: "12px" }}>
+          <Badge color={comp.color}>{comp.type}</Badge>
+        </div>
+
+        {/* Content */}
+        {activeSection === "overview" && (
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+              <Metric label="Fundada" value={comp.founded} color={comp.color} />
+              <Metric label="HQ" value={comp.hq} color={comp.color} />
+              <Metric label="Funding" value={comp.funding} color={comp.color} />
+            </div>
+            <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+              <Metric label="Empleados" value={comp.employees} color={comp.color} />
+              <Metric label="Revenue" value={comp.revenue} color={comp.color} />
+              <Metric label="Clientes" value={comp.clientCount} color={comp.color} />
+            </div>
+            <Card><Label color={comp.color}>Clientes destacados</Label><div style={{ color: "#ccd6f6", fontSize: "13px" }}>{comp.clients}</div></Card>
+            <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+              <Card style={{ flex: 1, minWidth: "220px" }}><Label color="#00cc88">Fortalezas</Label><ListItems items={comp.strengths} color="#00cc88" /></Card>
+              <Card style={{ flex: 1, minWidth: "220px" }}><Label color="#ff6b6b">Debilidades</Label><ListItems items={comp.weaknesses} color="#ff6b6b" /></Card>
+            </div>
+          </div>
+        )}
+
+        {activeSection === "business" && (
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            <Card><Label color={comp.color}>Modelo de Negocio — {comp.name}</Label><div style={{ color: "#ccd6f6", fontSize: "13px", lineHeight: 1.7 }}>{comp.model}</div></Card>
+            {!isVU && (
+              <>
+                <Card style={{ borderLeft: "3px solid #F15E37" }}><Label color="#F15E37">Modelo VU</Label><div style={{ color: "#ccd6f6", fontSize: "13px", lineHeight: 1.7 }}>Plataforma SaaS/PaaS/On-prem. Contratos enterprise + gobierno. Identity as infrastructure: verify once, identity as an asset.</div></Card>
+                <Card style={{ background: "#0a0f1e" }}><Label color="#64ffda">Diferencia clave</Label><div style={{ color: "#a8b2d1", fontSize: "13px", lineHeight: 1.7 }}>{comp.vuDiff}</div></Card>
+              </>
+            )}
+          </div>
+        )}
+
+        {activeSection === "products" && (
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+              <Card style={{ flex: 1, minWidth: "250px" }}><Label color={comp.color}>{comp.name}</Label><ListItems items={comp.products} color={comp.color} /></Card>
+              {!isVU && <Card style={{ flex: 1, minWidth: "250px" }}><Label color="#F15E37">VU</Label><ListItems items={vu.products} color="#F15E37" /></Card>}
+            </div>
+          </div>
+        )}
+
+        {activeSection === "clients" && (
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            <Card><Label color={comp.color}>Target — {comp.name}</Label><div style={{ color: "#ccd6f6", fontSize: "13px", lineHeight: 1.7 }}>{comp.target}</div></Card>
+            <Card><Label color={comp.color}>Regiones</Label><div style={{ color: "#ccd6f6", fontSize: "13px" }}>{comp.regions}</div></Card>
+            {!isVU && (
+              <Card style={{ borderLeft: "3px solid #F15E37" }}>
+                <Label color="#F15E37">Target VU</Label>
+                <div style={{ color: "#ccd6f6", fontSize: "13px", lineHeight: 1.7 }}>Financial Services, Gobierno, Gaming en LATAM, EMEA, US. Enterprise y gobierno. 170+ empresas y gobiernos en 30+ países. Único con infraestructura nacional (RENAPER, Mi Argentina) como cliente.</div>
+              </Card>
+            )}
+          </div>
+        )}
+
+        {activeSection === "marketing" && (
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+              <Card style={{ flex: 1, minWidth: "220px" }}><Label color={comp.color}>Messaging</Label><div style={{ color: "#ccd6f6", fontSize: "13px", lineHeight: 1.6 }}>{comp.messaging}</div></Card>
+              <Card style={{ flex: 1, minWidth: "220px" }}><Label color={comp.color}>Estilo</Label><div style={{ color: "#ccd6f6", fontSize: "13px", lineHeight: 1.6 }}>{comp.style}</div></Card>
+            </div>
+            <Card><Label color={comp.color}>Contenido que publica</Label><ListItems items={comp.content} color={comp.color} /></Card>
+            {/* Channels with links */}
+            <Card>
+              <Label color={comp.color}>Canales & Presencia Digital</Label>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+                {(comp.channels || []).map((ch, i) => (
+                  <a key={i} href={ch.url} target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", gap: "6px", padding: "8px 14px", background: "#0a0f1e", borderRadius: "8px", border: "1px solid #1a1a3a", textDecoration: "none", minWidth: "160px", transition: "border-color 0.2s" }}
+                    onMouseEnter={e => e.currentTarget.style.borderColor = comp.color}
+                    onMouseLeave={e => e.currentTarget.style.borderColor = "#1a1a3a"}>
+                    <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: comp.color, flexShrink: 0 }} />
+                    <div>
+                      <div style={{ color: "#e6f1ff", fontSize: "12px", fontWeight: 600 }}>{ch.name}</div>
+                      {ch.followers && <div style={{ color: "#64ffda", fontSize: "11px" }}>{ch.followers}</div>}
+                      <div style={{ color: "#4a5a7a", fontSize: "10px", wordBreak: "break-all" }}>{ch.url.replace("https://","").replace("www.","").slice(0,35)}{ch.url.length > 43 ? "…" : ""}</div>
+                    </div>
+                    <div style={{ marginLeft: "auto", color: "#4a5a7a", fontSize: "12px" }}>↗</div>
+                  </a>
+                ))}
+              </div>
+            </Card>
+            <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+              <Card style={{ flex: 1, minWidth: "200px" }}>
+                <Label color={comp.color}>LinkedIn — Estrategia</Label>
+                <div style={{ color: "#64ffda", fontSize: "16px", fontWeight: 700, marginBottom: "4px" }}>{comp.linkedinFollowers}</div>
+                <div style={{ color: "#a8b2d1", fontSize: "12px", lineHeight: 1.5 }}>{comp.linkedin}</div>
+              </Card>
+              <Card style={{ flex: 1, minWidth: "200px" }}><Label color={comp.color}>Eventos</Label><div style={{ color: "#a8b2d1", fontSize: "12px", lineHeight: 1.5 }}>{comp.events}</div></Card>
+            </div>
+          </div>
+        )}
+
+        {activeSection === "awards" && (
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            <Card>
+              <Label color={comp.color}>Premios & Reconocimientos — {comp.name}</Label>
+              {comp.awards.map((a, i) => (
+                <div key={i} style={{ display: "flex", gap: "10px", alignItems: "flex-start", marginBottom: "8px", paddingBottom: "8px", borderBottom: i < comp.awards.length - 1 ? "1px solid #1a1a3a" : "none" }}>
+                  <div style={{ minWidth: "65px", padding: "3px 8px", borderRadius: "6px", background: comp.color + "20", color: comp.color, fontSize: "11px", fontWeight: 700, textAlign: "center" }}>{a.year}</div>
+                  <div style={{ color: "#ccd6f6", fontSize: "13px", lineHeight: 1.5 }}>{a.award}</div>
+                </div>
+              ))}
+            </Card>
+            {!isVU && (
+              <Card style={{ borderLeft: "3px solid #F15E37" }}>
+                <Label color="#F15E37">Premios & Reconocimientos — VU</Label>
+                {vu.awards.map((a, i) => (
+                  <div key={i} style={{ display: "flex", gap: "10px", alignItems: "flex-start", marginBottom: "8px", paddingBottom: "8px", borderBottom: i < vu.awards.length - 1 ? "1px solid #1a1a3a" : "none" }}>
+                    <div style={{ minWidth: "65px", padding: "3px 8px", borderRadius: "6px", background: "#F15E3720", color: "#F15E37", fontSize: "11px", fontWeight: 700, textAlign: "center" }}>{a.year}</div>
+                    <div style={{ color: "#ccd6f6", fontSize: "13px", lineHeight: 1.5 }}>{a.award}</div>
+                  </div>
+                ))}
+              </Card>
+            )}
+            {/* Awards comparison mini-table */}
+            <Card style={{ background: "#0a0f1e" }}>
+              <Label color="#64ffda">Comparativo de peso de premios</Label>
+              <div style={{ fontSize: "12px", color: "#a8b2d1", lineHeight: 1.7 }}>
+                <strong style={{ color: "#00B894" }}>Sumsub</strong> lidera en reconocimientos de analistas: Gartner Leader 2024+2025, Forrester Wave Leader 2025. Es el más premiado por analistas independientes.
+                <br /><strong style={{ color: "#1A73E8" }}>Veriff</strong> destaca en premios de industria: CyberSecurity Breakthrough, G2 Leader, Chartis. Unicornio desde 2022.
+                <br /><strong style={{ color: "#E84393" }}>Jumio</strong> tiene Gartner Leader 2024, SPARK Matrix Leader 2025, y múltiples awards de ciberseguridad. Más premiado en enterprise.
+                <br /><strong style={{ color: "#EB5424" }}>Auth0/Okta</strong> domina IAM: Gartner Leader 8 años, KuppingerCole Leader CIAM. La marca más grande por revenue ($2.6B).
+                <br /><strong style={{ color: "#F15E37" }}>VU</strong> tiene el reconocimiento más valioso en LATAM: Microsoft Partner of the Year x4, Gartner Market Guide (único LATAM). El gap está en falta de premios recientes tipo Forrester/Gartner MQ.
+              </div>
+            </Card>
+          </div>
+        )}
+
+        {activeSection === "swot" && (
+          <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+            {isVU ? (
+              <>
+                <Card style={{ borderLeft: "3px solid #F15E37" }}>
+                  <Label color="#F15E37">SWOT — VU Security</Label>
+                  <div style={{ fontSize: "13px", color: "#a8b2d1", lineHeight: 1.7 }}>
+                    <strong style={{ color: "#00cc88" }}>Fortalezas:</strong> 18 años, RENAPER + 8 gobiernos, Microsoft Partner x4, Gartner Market Guide (único LATAM), deployment flexible, AI Agent Identity, fraud ML con datos reales LATAM, VU ONE como plataforma unificada.
+                    <br /><br /><strong style={{ color: "#ff6b6b" }}>Debilidades:</strong> Revenue $16.5M vs $120M de Sumsub, funding $16.8M vs $200M de Veriff, brand awareness limitado fuera de LATAM, content marketing por debajo, sin premios Gartner MQ Leader / Forrester Wave.
+                    <br /><br /><strong style={{ color: "#64ffda" }}>Oportunidades:</strong> Captura de clientes MetaMap en transición, AI Agent Identity como frontera sin competencia, escalar modelo RENAPER a más países, Veriff entrando a LATAM sin profundidad = ventana de defensa.
+                    <br /><br /><strong style={{ color: "#FDCB6E" }}>Amenazas:</strong> Sumsub con escala y Gartner, Veriff con $1.5B entrando a LATAM, Auth0/Okta si agrega IDV, commoditización del mercado IDV, Big Tech digital wallets.
+                  </div>
+                </Card>
+                <Card style={{ background: "#0a0f1e" }}>
+                  <Label color="#64ffda">Posición defensiva</Label>
+                  <div style={{ color: "#a8b2d1", fontSize: "13px", lineHeight: 1.7 }}>La ventaja competitiva de VU es estructural y temporal: 18 años de relaciones institucionales, integración con registros civiles nacionales, y un modelo de identity-as-infrastructure que ningún competidor puede replicar comprando tecnología. Lo que VU necesita cerrar es el gap de awareness, content, y reconocimiento de analistas.</div>
+                </Card>
+              </>
+            ) : (
+              <>
+                <Card style={{ background: "#1b0d1e" }}><Label color="#ff6b6b">Amenaza para VU</Label><div style={{ color: "#ccd6f6", fontSize: "13px", lineHeight: 1.7 }}>{comp.threat}</div></Card>
+                <Card style={{ background: "#0a0f1e" }}><Label color="#64ffda">Oportunidad para VU</Label><div style={{ color: "#ccd6f6", fontSize: "13px", lineHeight: 1.7 }}>{comp.opportunity}</div></Card>
+                <Card style={{ borderLeft: "3px solid #F15E37" }}><Label color="#F15E37">Ventaja competitiva VU</Label><div style={{ color: "#ccd6f6", fontSize: "13px", lineHeight: 1.7 }}>{comp.vuDiff}</div></Card>
+              </>
+            )}
+          </div>
+        )}
+
+        {activeSection === "matrix" && (
+          <div>
+            <Card style={{ marginBottom: "14px", background: "#0a0f1e", border: "1px solid #1a1a3a" }}>
+              <Label color="#64ffda">Cómo leer esta matriz</Label>
+              <div style={{ fontSize: "12px", color: "#a8b2d1", lineHeight: 1.8 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" }}>
+                  <div style={{ width: "60px", height: "10px", background: "linear-gradient(90deg, #F15E37 0%, #F15E37 70%, transparent 70%)", borderRadius: "3px" }} />
+                  <span>Cada <strong style={{ color: "#e6f1ff" }}>barra</strong> = puntaje del competidor en esa dimensión.</span>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" }}>
+                  <span style={{ color: "#F15E37", fontWeight: 700, fontSize: "13px", minWidth: "60px", textAlign: "center" }}>7</span>
+                  <span>El <strong style={{ color: "#e6f1ff" }}>número</strong> = puntaje de 0 a 10 (10 = mejor del mercado).</span>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <span style={{ color: "#8892b0", fontSize: "14px", minWidth: "60px", textAlign: "center" }}>click</span>
+                  <span><strong style={{ color: "#e6f1ff" }}>Click en el nombre</strong> de cada dimensión para ver qué mide.</span>
+                </div>
+                <div style={{ marginTop: "6px", padding: "8px 10px", background: "#12122a", borderRadius: "6px", fontSize: "11px", color: "#6a7a9a" }}>
+                  * Puntajes relativos dentro de este grupo. Fuentes: revenue, funding, cobertura, Gartner, Forrester, G2, sitios oficiales.
+                </div>
+              </div>
+            </Card>
+            <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginBottom: "14px" }}>
+              {matrixPlayers.map((c) => (
+                <div key={c.key} style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                  <div style={{ width: "10px", height: "10px", borderRadius: "2px", background: c.color }} />
+                  <span style={{ fontSize: "10px", color: "#8892b0" }}>{c.label}</span>
+                </div>
+              ))}
+            </div>
+            {matrixDims.map((d, i) => (
+              <div key={i} style={{ marginBottom: "12px" }}>
+                <div onClick={() => setExpandedDim(expandedDim === d.id ? null : d.id)}
+                  style={{ fontSize: "11px", color: expandedDim === d.id ? "#64ffda" : "#8892b0", marginBottom: "3px", fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", gap: "5px", userSelect: "none" }}>
+                  <span style={{ fontSize: "10px", opacity: 0.6 }}>{expandedDim === d.id ? "v" : ">"}</span>
+                  {d.label} <span style={{ fontSize: "9px", color: "#4a5a7a", fontWeight: 400 }}>*</span>
+                </div>
+                {expandedDim === d.id && (
+                  <div style={{ fontSize: "11px", color: "#6a7a9a", lineHeight: 1.6, padding: "6px 10px", marginBottom: "6px", background: "#0a0f1e", borderRadius: "6px", borderLeft: "2px solid #64ffda40" }}>
+                    {d.def}
+                  </div>
+                )}
+                {matrixPlayers.map((c) => (
+                  <div key={c.key} style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "2px" }}>
+                    <div style={{ width: "50px", fontSize: "9px", color: "#4a5a7a", textAlign: "right" }}>{c.label}</div>
+                    <div style={{ flex: 1, height: "10px", background: "#0a0f1e", borderRadius: "3px", overflow: "hidden", maxWidth: "280px" }}>
+                      <div style={{ width: (d[c.key] * 10) + "%", height: "100%", background: c.color, borderRadius: "3px", opacity: 0.8 }} />
+                    </div>
+                    <span style={{ fontSize: "10px", color: c.color, fontWeight: 600, minWidth: "16px" }}>{d[c.key]}</span>
+                  </div>
+                ))}
+              </div>
+            ))}
+            <Card style={{ marginTop: "10px", background: "#0a0f1e", border: "1px dashed #1a1a3a" }}>
+              <div style={{ fontSize: "11px", color: "#4a5a7a", lineHeight: 1.7 }}>
+                <strong style={{ color: "#6a7a9a" }}>Notas metodológicas:</strong><br />
+                - Los puntajes son relativos entre este grupo de competidores, no valores absolutos del mercado.<br />
+                - Un 10 = el mejor de este grupo en esa dimensión. Un 0 = no tiene esa capacidad.<br />
+                - Profundidad = relaciones + regulación + tiempo operando, no solo presencia comercial.<br />
+                - Suite completa penaliza point solutions que requieren múltiples vendors.<br />
+                - AI Agent Identity es emergente: puntajes altos = producto en mercado, no solo roadmap.
+              </div>
+            </Card>
+          </div>
+        )}
+
+        {/* Footer Summary */}
+        <div style={{ marginTop: "24px", padding: "14px", background: "#F15E3710", borderRadius: "10px", borderLeft: "3px solid #F15E37" }}>
+          <Label color="#F15E37">Resumen Ejecutivo</Label>
+          <div style={{ fontSize: "12px", color: "#a8b2d1", lineHeight: 1.7 }}>
+            <strong>Directos:</strong> Sumsub (mayor amenaza por escala + Gartner), Veriff (unicornio entrando a LATAM), MetaMap (adquirida — oportunidad de captura).
+            <br /><strong>Indirectos:</strong> Auth0/Okta (CIAM puro — complementario pero riesgo si agrega IDV), Jumio (enterprise global), Facephi (banca LATAM), FaceTec (componente — partnership potencial).
+            <br /><strong>Gaps de VU:</strong> Brand awareness, content marketing, premios de analistas tipo Gartner MQ. La fortaleza irreplicable es: 18 años + 8 gobiernos + RENAPER + deployment flexible + AI Agent Identity.
+          </div>
+        </div>
+
+        <div style={{ textAlign: "center", marginTop: "14px", fontSize: "10px", color: "#2a2a4a" }}>
+          Datos: Abril 2026 · Fuentes: Crunchbase, PitchBook, Gartner, Forrester, G2, sitios oficiales, reportes financieros
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

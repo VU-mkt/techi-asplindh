@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VU — Estudio Ciberseguridad LATAM 2026</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #080816; }
+button { font-family: inherit; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #12122a; }
+::-webkit-scrollbar-thumb { background: #2a2a4a; border-radius: 3px; }
+table { border-collapse: collapse; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+<script type="text/babel">
+const { useState } = React;
+
+
+// ─── DATA ───────────────────────────────────────────────────────────────────
+const marketOverview = {
+  totalCyber: { value: "$14.4B", label: "Ciberseguridad LATAM 2025", cagr: "12.4%", source: "Grand View Research" },
+  idv: { value: "$720M", label: "Identity Verification LATAM 2024", cagr: "~9%", source: "Emergen Research" },
+  fraud: { value: "$1.75B", label: "Fraud Detection LATAM 2025", cagr: "20.2%", source: "Market Data Forecast" },
+  iam: { value: "$1.1B", label: "IAM LATAM 2025 (est.)", cagr: "12.3%", source: "Mordor Intelligence" },
+  digitalId: { value: "$2.72B", label: "Digital Identity LATAM 2024", cagr: "15.4%", source: "IMARC Group" },
+};
+
+const vuTam = {
+  identity: { size: "$720M", share: "~5% global IDV", vuArea: "Onboarding Mgmt, Identity Link" },
+  fraud: { size: "$1.75B", share: "~12% de cyber total", vuArea: "Fraud Analysis (ML multichannel)" },
+  auth: { size: "$1.1B", share: "~8% de cyber total", vuArea: "Authentication Mgmt, CIAM, MFA" },
+  total: { size: "$3.57B", label: "TAM combinado VU en LATAM (Identity + Fraud + Auth)" },
+};
+
+const countries = [
+  { name: "Brasil", flag: "🇧🇷", cyberSize: "$7.1B", share: "49%", cagr: "8.3%", idvSize: "$290M", fraudSize: "$680M", iamSize: "$450M", regulation: "LGPD (2021), Lei 14.967, Resolución 538 BCB (2025), Bill 4752/2025", maturity: 8, digitalPop: "84%", fintechs: "1,200+", keyDrivers: "PIX (180M+ usuarios), open banking, iGaming regulado 2025, LGPD enforcement", obstacles: "Complejidad regulatoria federal/estatal, costo de compliance, talento escaso (~750K gap)", vuOpportunity: "RENAPER-like para CPF/CNH digital, fraud prevention para PIX, iGaming compliance. Brasil = 49% del mercado." },
+  { name: "México", flag: "🇲🇽", cyberSize: "$2.8B", share: "19%", cagr: "11.2%", idvSize: "$140M", fraudSize: "$320M", iamSize: "$190M", regulation: "Ley Federal de Protección de Datos, Estrategia Nacional de Ciberseguridad, CNBV", maturity: 6, digitalPop: "78%", fintechs: "650+", keyDrivers: "Fintech Law, nearshoring tech, 650+ fintechs activas, digital ID strategy nacional", obstacles: "Fragmentación regulatoria, bajo enforcement, ciberataques a infraestructura crítica +35% YoY", vuOpportunity: "Fintech onboarding masivo, gobierno digital, nearshoring = empresas internacionales necesitan KYC local." },
+  { name: "Argentina", flag: "🇦🇷", cyberSize: "$1.2B", share: "8%", cagr: "9.5%", idvSize: "$85M", fraudSize: "$140M", iamSize: "$75M", regulation: "Ley 25.326, RENAPER digital, Mi Argentina, regulación fintech BCRA", maturity: 7, digitalPop: "87%", fintechs: "300+", keyDrivers: "Boom fintech (Mercado Pago, Ualá), MFA obligatorio BCRA, RENAPER como infra nacional", obstacles: "Inflación/FX complica planificación de CAPEX, presupuestos en USD limitados, talento migra", vuOpportunity: "VU ya opera RENAPER + Mi Argentina + ANSES. Base instalada = expansión natural a más verticales." },
+  { name: "Colombia", flag: "🇨🇴", cyberSize: "$980M", share: "7%", cagr: "10.8%", idvSize: "$60M", fraudSize: "$110M", iamSize: "$55M", regulation: "SIC (Superintendencia), Ley 1581, CONPES 3854, Circular 007 SFC", maturity: 5, digitalPop: "73%", fintechs: "200+", keyDrivers: "SFC audita fraud controls activamente, fintech en crecimiento, mobile threats +72% YoY", obstacles: "Madurez digital desigual, presupuestos limitados en sector público, brecha urbano-rural", vuOpportunity: "Gobierno digital en expansión, banca con necesidad de fraud prevention, fintech onboarding." },
+  { name: "Chile", flag: "🇨🇱", cyberSize: "$750M", share: "5%", cagr: "9.8%", idvSize: "$45M", fraudSize: "$85M", iamSize: "$50M", regulation: "Ley 21.459 (2022), Framework Law ciberseg (2025), Ley de Datos Personales", maturity: 7, digitalPop: "92%", fintechs: "180+", keyDrivers: "Regulación más madura de LATAM, minería digital, data centers, open banking", obstacles: "Mercado chico, concentración en pocas empresas grandes, ransomware en minería", vuOpportunity: "Minería necesita OT security + identity, regulación avanzada = compliance demand, gobierno digital." },
+  { name: "Perú", flag: "🇵🇪", cyberSize: "$420M", share: "3%", cagr: "12.1%", idvSize: "$25M", fraudSize: "$50M", iamSize: "$28M", regulation: "Ley 29733, Autoridad Nacional de Protección de Datos", maturity: 4, digitalPop: "71%", fintechs: "120+", keyDrivers: "Banca digital en crecimiento, Yape/Plin (pagos móviles), gobierno digital", obstacles: "Infraestructura limitada, baja madurez cyber, brecha digital rural significativa", vuOpportunity: "Early mover advantage. Gobierno buscando digitalizar identidad. Banca necesita fraud prevention." },
+  { name: "Uruguay", flag: "🇺🇾", cyberSize: "$180M", share: "1.2%", cagr: "10.5%", idvSize: "$12M", fraudSize: "$22M", iamSize: "$15M", regulation: "Ley 18.331 (Datos Personales), AGESIC (Agencia e-Gov), CERT.uy", maturity: 8, digitalPop: "90%", fintechs: "80+", keyDrivers: "Líder regional en e-government (AGESIC), alta digitalización per cápita, hub tech regional, estabilidad política", obstacles: "Mercado muy chico, pocas empresas grandes, talento migra a Argentina/Brasil por salarios", vuOpportunity: "Gobierno digital más maduro de LATAM. AGESIC como partner potencial. Hub para empresas regionales que necesitan compliance." },
+  { name: "Ecuador", flag: "🇪🇨", cyberSize: "$280M", share: "2%", cagr: "13.5%", idvSize: "$18M", fraudSize: "$35M", iamSize: "$20M", regulation: "Ley Orgánica de Protección de Datos (2021), ARCOTEL, Estrategia Nacional de Ciberseguridad", maturity: 4, digitalPop: "68%", fintechs: "90+", keyDrivers: "Ley de datos nueva (2021), banca digital en crecimiento, gobierno digital, 70% de incidentes en empresas (2019)", obstacles: "Infraestructura débil, enforcement limitado, presupuestos bajos, brecha rural marcada", vuOpportunity: "Mercado emergente con regulación nueva = demand de compliance. Banca necesita fraud + onboarding. ITU mejoró su ranking 2024." },
+  { name: "Paraguay", flag: "🇵🇾", cyberSize: "$95M", share: "0.7%", cagr: "14%", idvSize: "$6M", fraudSize: "$12M", iamSize: "$7M", regulation: "Ley 6534/2020 (Ciberseguridad), CERT-PY, Ley 1682 (Datos)", maturity: 3, digitalPop: "65%", fintechs: "50+", keyDrivers: "Ley de ciberseguridad 2020, crecimiento fintech, pagos digitales (billeteras), Claro SOC regional", obstacles: "Mercado muy pequeño, madurez baja, infraestructura limitada, poco enforcement", vuOpportunity: "Early stage = baja competencia. SOC regional de Claro (Arg/Chi/Uru/Par). Fintech emergente necesita KYC básico." },
+  { name: "Rep. Dominicana", flag: "🇩🇴", cyberSize: "$210M", share: "1.5%", cagr: "12.8%", idvSize: "$14M", fraudSize: "$28M", iamSize: "$16M", regulation: "Ley 172-13 (Datos Personales), CNCS (Centro Nacional Ciberseguridad), Ley 53-07 (Crímenes IT)", maturity: 4, digitalPop: "74%", fintechs: "60+", keyDrivers: "Centro financiero del Caribe, turismo digital, banca en crecimiento, CNCS activo desde 2018", obstacles: "Regulación en desarrollo, poco talento local, dependencia de vendors internacionales", vuOpportunity: "Hub financiero caribeño. Banca + turismo necesitan fraud prevention + identity. Poca competencia local." },
+  { name: "Panamá", flag: "🇵🇦", cyberSize: "$250M", share: "1.7%", cagr: "11.5%", idvSize: "$16M", fraudSize: "$32M", iamSize: "$18M", regulation: "Ley 81 (Datos Personales 2019), CSIRT Panamá, hub bancario internacional", maturity: 5, digitalPop: "76%", fintechs: "70+", keyDrivers: "Hub bancario internacional (centro financiero), Canal de Panamá digital, AML/KYC para banca offshore, postura cyber mejorada (ITU 2024)", obstacles: "Enforcement en desarrollo, dependencia de sector financiero, mercado concentrado", vuOpportunity: "Centro financiero = alta demanda de KYC/AML. Banca offshore necesita identity verification fuerte. Gobierno invirtiendo en cyber." },
+  { name: "Costa Rica", flag: "🇨🇷", cyberSize: "$195M", share: "1.3%", cagr: "13.2%", idvSize: "$12M", fraudSize: "$25M", iamSize: "$14M", regulation: "Ley 8968 (Datos Personales), CSIRT-CR, Estrategia Nacional Ciberseguridad 2023", maturity: 5, digitalPop: "81%", fintechs: "65+", keyDrivers: "Ataque Conti 2022 = wake-up call nacional, inversión post-ataque en cyber, nearshoring tech, alta digitalización", obstacles: "Post-Conti todavía reconstruyendo capacidad, presupuesto gobierno limitado, mercado chico", vuOpportunity: "Post-Conti generó urgencia real en cyber. Gobierno invirtiendo fuerte. Nearshoring atrae empresas que necesitan compliance." },
+  { name: "El Salvador", flag: "🇸🇻", cyberSize: "$65M", share: "0.4%", cagr: "15%", idvSize: "$4M", fraudSize: "$8M", iamSize: "$5M", regulation: "Ley de Firma Electrónica, Ley Bitcoin (2021), CERT-SV en desarrollo", maturity: 2, digitalPop: "55%", fintechs: "30+", keyDrivers: "Adopción Bitcoin como moneda legal, billeteras digitales (Chivo), gobierno digital incipiente", obstacles: "Madurez muy baja, infraestructura limitada, poca regulación de datos, mercado muy pequeño", vuOpportunity: "Bitcoin/cripto = necesidad de KYC fuerte. Mercado pequeño pero con crecimiento alto. Pocos competidores." },
+  { name: "Nicaragua", flag: "🇳🇮", cyberSize: "$35M", share: "0.2%", cagr: "10%", idvSize: "$2M", fraudSize: "$4M", iamSize: "$3M", regulation: "Ley 787 (Datos Personales), regulación básica, CERT-NI incipiente", maturity: 2, digitalPop: "50%", fintechs: "15+", keyDrivers: "Digitalización bancaria incipiente, telecomunicaciones en crecimiento, gobierno digital básico", obstacles: "Madurez muy baja, contexto político limita inversión extranjera, infraestructura débil, mercado mínimo", vuOpportunity: "Mercado muy pequeño. Oportunidad limitada a mediano plazo. Monitorial para cuando madure regulación." },
+];
+
+const industries = [
+  { name: "Banca / BFSI", icon: "🏦", cyberShare: "26.1%", cyberSpend: "$3.75B", idvNeed: 10, fraudNeed: 10, authNeed: 10, budget: "10-15% de IT", growth: "8.5%", drivers: "Regulación KYC/AML, open banking, pagos digitales (PIX, CoDi), onboarding remoto, fraude en tiempo real", vuFit: "Perfecto. VU ya tiene HSBC, Openbank, Prisma, Banco Argentino. Fraud Analysis + CIAM + Onboarding = suite completa para banca.", obstacles: "Ciclos de venta largos, procurement complejo, vendor lock-in con incumbents (IBM, Oracle)" },
+  { name: "Fintech", icon: "💳", cyberShare: "~12%", cyberSpend: "$1.7B", idvNeed: 10, fraudNeed: 9, authNeed: 9, budget: "12-18% de IT", growth: "14%", drivers: "KYC obligatorio, onboarding digital masivo, compliance regulatorio creciente, prevención de cuentas falsas", vuFit: "Alto. Identity Link (72h a producción) es ideal para fintechs que necesitan velocidad. Modelo pay-as-you-go.", obstacles: "Budget limitado en early-stage, switching costs bajos, muchos competidores (Sumsub, Veriff)" },
+  { name: "Telecomunicaciones", icon: "📡", cyberShare: "~8%", cyberSpend: "$1.15B", idvNeed: 7, fraudNeed: 8, authNeed: 9, budget: "8-12% de IT", growth: "9.2%", drivers: "SIM swap fraud, identity verification para portabilidad, MFA para usuarios, IoT security", vuFit: "Medio-alto. Authentication Management + Fraud Analysis para SIM swap. CIAM para portales de clientes.", obstacles: "Contratos enterprise largos, infraestructura legacy, pocos deals pero alto valor" },
+  { name: "Gaming / Gambling", icon: "🎰", cyberShare: "~5%", cyberSpend: "$720M", idvNeed: 10, fraudNeed: 9, authNeed: 8, budget: "8-12% de IT", growth: "18%", drivers: "Regulación iGaming Brasil (2025), age verification obligatorio, KYC para apostadores, anti-lavado", vuFit: "Excelente. VU ya tiene BetWarrior (72h a producción). iGaming Brasil es oportunidad masiva. Age estimation + KYC.", obstacles: "Regulación nueva = incertidumbre, margen de tiempo corto para compliance" },
+  { name: "Seguros", icon: "🛡️", cyberShare: "~4%", cyberSpend: "$575M", idvNeed: 8, fraudNeed: 9, authNeed: 7, budget: "7-10% de IT", growth: "11%", drivers: "Fraude en siniestros, onboarding digital de pólizas, identidad verificada para claims, regulación", vuFit: "Alto. Fraud Analysis para detección de siniestros falsos. Onboarding digital de asegurados. CIAM.", obstacles: "Industria conservadora, ciclos largos, legacy systems" },
+  { name: "Salud / Healthcare", icon: "🏥", cyberShare: "~6%", cyberSpend: "$860M", idvNeed: 8, fraudNeed: 7, authNeed: 9, budget: "6-9% de IT", growth: "14.7%", drivers: "Telemedicina, historia clínica digital, protección de datos de pacientes, ransomware a hospitales", vuFit: "Medio-alto. CIAM para portales de pacientes. Authentication para acceso a historias clínicas. Compliance LGPD/salud.", obstacles: "Presupuestos públicos limitados, fragmentación de sistemas, regulación específica de salud" },
+  { name: "Gobierno", icon: "🏛️", cyberShare: "~9%", cyberSpend: "$1.3B", idvNeed: 10, fraudNeed: 8, authNeed: 10, budget: "5-8% de IT", growth: "10%", drivers: "Identidad digital nacional, gobierno electrónico, Mi Argentina/gov.br, e-voting, compliance", vuFit: "Perfecto. VU ya opera infraestructura nacional (RENAPER, ANSES, Mi Argentina). Único vendor con este nivel de acceso.", obstacles: "Procurement público lento, on-prem requerido, ciclos presupuestarios anuales" },
+  { name: "Retail / E-commerce", icon: "🛒", cyberShare: "~7%", cyberSpend: "$1.0B", idvNeed: 6, fraudNeed: 9, authNeed: 7, budget: "5-8% de IT", growth: "12%", drivers: "Fraude en pagos online, account takeover, identity verification para marketplaces, devoluciones fraudulentas", vuFit: "Medio. Fraud Analysis para pagos. CIAM para marketplaces. Competencia fuerte de ClearSale, Signifyd.", obstacles: "Margen bajo = sensibilidad al precio, alta competencia en fraud prevention puro" },
+  { name: "Energía / Minería / Gas", icon: "⛏️", cyberShare: "~5%", cyberSpend: "$720M", idvNeed: 5, fraudNeed: 5, authNeed: 8, budget: "4-7% de IT", growth: "15%", drivers: "OT security, ransomware a SCADA/ICS, acceso remoto a plantas, compliance ambiental digital", vuFit: "Medio. Authentication para acceso a sistemas OT. CIAM para contratistas. Menos demanda de IDV puro.", obstacles: "Foco en OT/network security más que identity, pocos proveedores especializados" },
+  { name: "Entretenimiento", icon: "🎬", cyberShare: "~2%", cyberSpend: "$290M", idvNeed: 7, fraudNeed: 6, authNeed: 7, budget: "5-8% de IT", growth: "13%", drivers: "Streaming, age verification, account sharing prevention, ticketing fraude, digital content protection", vuFit: "Medio. Age estimation + authentication. Mercado emergente pero creciente.", obstacles: "No es prioridad de security spend, fragmentado" },
+];
+
+const obstacles = [
+  { category: "Presupuesto", items: ["LATAM destina 8-12% de IT a ciberseguridad (vs 12-15% en NA/EU)", "De ese 8-12%, solo ~15-20% va a identity/fraud/auth", "FX volatility (Argentina, Colombia) complica planificación en USD", "SMEs tienen <$50K/año para security total"] },
+  { category: "Talento", items: ["Déficit de 750K profesionales de ciberseguridad solo en Brasil", "Competencia por talento con empresas globales (remote)", "Falta de especialistas en identity/fraud — formación limitada", "Rotación alta en posiciones de security"] },
+  { category: "Madurez", items: ["Muchas empresas aún usan passwords estáticos sin MFA", "Legacy systems dificultan integración de IAM moderno", "Brecha digital rural — ~20-30% sin acceso digital en algunos países", "Falta de frameworks regulatorios unificados en la región"] },
+  { category: "Competencia", items: ["Sumsub, Veriff, Jumio entrando agresivamente a LATAM", "Big Tech (Apple/Google wallets) commoditizando verificación básica", "Players locales (ClearSale en Brasil, Unico ID) con ventaja regional", "Auth0/Okta domina CIAM con escala y dev community"] },
+];
+
+const strategies = [
+  { title: "Gobierno como ancla", desc: "Escalar el modelo RENAPER a más países. La infraestructura nacional de identidad es la ventaja irreplicable. Prioridad: Brasil (CPF digital), Colombia, Chile, Perú.", color: "#F15E37", priority: "CRÍTICA" },
+  { title: "iGaming Brasil 2025", desc: "Brasil reguló iGaming en 2025. Replicar caso BetWarrior (72h a producción) para capturar operadores que necesitan KYC + age verification + AML compliance urgente.", color: "#00cc88", priority: "URGENTE" },
+  { title: "Fintech fast-track", desc: "Identity Link como producto de entrada para fintechs: NoCode, 72h, bajo costo inicial. Upsell a Fraud Analysis + CIAM cuando escalen. Foco: México (650+ fintechs), Brasil, Colombia.", color: "#1A73E8", priority: "ALTA" },
+  { title: "Banca LATAM expansion", desc: "Replicar caso HSBC (-40% fraude) y Falabella (23M usuarios) como proof points. Target: top 50 bancos de LATAM. Fraud Analysis + CIAM + Authentication como bundle.", color: "#6C5CE7", priority: "ALTA" },
+  { title: "AI Agent Identity first-mover", desc: "Ningún competidor tiene AI Agent Identity en mercado. Posicionar a VU como el estándar para delegación de identidad en agentes de IA. Vertical: banca, fintech, gobierno.", color: "#FDCB6E", priority: "ESTRATÉGICA" },
+  { title: "Content & awareness gap", desc: "Cerrar el gap de brand awareness vs Sumsub (80K LI) y Veriff (50K LI). Publicar reportes de fraude LATAM, casos con números reales, thought leadership. Objetivo: 3x LinkedIn followers en 12 meses.", color: "#E84393", priority: "MEDIA" },
+  { title: "Healthcare emerging", desc: "Salud crece 14.7% CAGR — el más rápido. Telemedicina + historia clínica digital necesitan CIAM + authentication. Oportunidad en Brasil, Chile, Colombia.", color: "#636E72", priority: "MEDIA" },
+];
+
+// ─── COMPONENTS ─────────────────────────────────────────────────────────────
+const glossary = [
+  { cat: "Identity & Verificación", color: "#F15E37", terms: [
+    { term: "IDV", def: "Identity Verification. Proceso de confirmar que una persona es quien dice ser, generalmente mediante documentos + biometría." },
+    { term: "KYC", def: "Know Your Customer. Regulación que obliga a las empresas a verificar la identidad de sus clientes antes de operar." },
+    { term: "KYB", def: "Know Your Business. Similar a KYC pero para verificar empresas y sus beneficiarios finales." },
+    { term: "eKYC", def: "Electronic KYC. Verificación de identidad 100% digital, sin presencia física." },
+    { term: "Onboarding digital", def: "Proceso de registro y verificación de un nuevo cliente o usuario de forma remota/digital." },
+    { term: "OCR", def: "Optical Character Recognition. Tecnología que extrae texto de imágenes de documentos (DNI, pasaporte, etc.)." },
+    { term: "Liveness Detection", def: "Prueba de vida. Tecnología que verifica que la persona frente a la cámara es real y no una foto, video o deepfake." },
+    { term: "Biometría", def: "Uso de características físicas únicas (rostro, huella, iris, voz) para identificar o autenticar personas." },
+    { term: "Deepfake", def: "Contenido sintético generado por IA que imita el rostro o voz de una persona real. Amenaza creciente para IDV." },
+    { term: "Identidad sintética", def: "Identidad falsa creada combinando datos reales y ficticios. Usada para abrir cuentas fraudulentas." },
+    { term: "Digital ID / Identidad digital", def: "Representación digital de la identidad de una persona, verificable electrónicamente." },
+    { term: "RENAPER", def: "Registro Nacional de las Personas (Argentina). Administra el DNI y provee infraestructura de identidad nacional. VU opera esta integración." },
+  ]},
+  { cat: "Fraude & Prevención", color: "#00B894", terms: [
+    { term: "Fraud Detection & Prevention", def: "Conjunto de tecnologías y procesos para identificar, prevenir y gestionar actividades fraudulentas." },
+    { term: "AML", def: "Anti-Money Laundering. Regulaciones y procesos para prevenir el lavado de dinero." },
+    { term: "Transaction Monitoring", def: "Monitoreo en tiempo real de transacciones financieras para detectar patrones sospechosos." },
+    { term: "Account Takeover (ATO)", def: "Cuando un atacante obtiene acceso no autorizado a la cuenta de un usuario legítimo." },
+    { term: "SIM Swap", def: "Fraude donde el atacante transfiere el número de teléfono de la víctima a una nueva SIM para interceptar SMS/OTP." },
+    { term: "PEP Screening", def: "Politically Exposed Persons. Verificación contra listas de personas políticamente expuestas para compliance AML." },
+    { term: "Sanctions Screening", def: "Verificación contra listas de sanciones internacionales (OFAC, ONU, EU) para compliance." },
+    { term: "False Positive", def: "Alerta de fraude que resulta ser legítima. Reducir false positives es clave para no bloquear clientes reales." },
+    { term: "Mule Account", def: "Cuenta bancaria usada como intermediaria para mover fondos de origen ilícito." },
+    { term: "Chargeback", def: "Reversión de un cargo en tarjeta de crédito. Indicador de fraude cuando es recurrente." },
+  ]},
+  { cat: "Autenticación & Acceso", color: "#1A73E8", terms: [
+    { term: "IAM", def: "Identity & Access Management. Gestión de identidades y control de acceso a sistemas y datos." },
+    { term: "CIAM", def: "Customer Identity & Access Management. IAM orientado a clientes externos (no empleados). Producto core de VU." },
+    { term: "MFA", def: "Multi-Factor Authentication. Autenticación que requiere 2+ factores (algo que sé, algo que tengo, algo que soy)." },
+    { term: "TOTP", def: "Time-based One-Time Password. Código temporal generado por una app como Google Authenticator." },
+    { term: "SSO", def: "Single Sign-On. Autenticación única que permite acceder a múltiples sistemas con un solo login." },
+    { term: "Zero Trust", def: "Modelo de seguridad que no confía en ningún usuario/dispositivo por defecto. Requiere verificación continua." },
+    { term: "Passwordless", def: "Autenticación sin contraseña, usando biometría, magic links, o passkeys." },
+    { term: "Magic Link", def: "Enlace único enviado por email/SMS que autentica al usuario sin contraseña. Ofrecido por VU." },
+    { term: "RBAC", def: "Role-Based Access Control. Control de acceso basado en roles asignados al usuario." },
+    { term: "SASE", def: "Secure Access Service Edge. Arquitectura que combina networking y seguridad en la nube." },
+    { term: "PAM", def: "Privileged Access Management. Gestión de acceso para cuentas privilegiadas (admins, root, etc.)." },
+  ]},
+  { cat: "Mercado & Regulación", color: "#FDCB6E", terms: [
+    { term: "TAM", def: "Total Addressable Market. Tamaño total del mercado al que puede aspirar una empresa." },
+    { term: "SAM", def: "Serviceable Addressable Market. Porción del TAM que la empresa puede realmente alcanzar." },
+    { term: "CAGR", def: "Compound Annual Growth Rate. Tasa de crecimiento anual compuesto. Indica crecimiento promedio del mercado." },
+    { term: "ARR", def: "Annual Recurring Revenue. Ingreso anual recurrente de suscripciones. Métrica clave de empresas SaaS." },
+    { term: "NRR", def: "Net Revenue Retention. Retención neta de ingresos. >100% = los clientes existentes gastan más cada año." },
+    { term: "ARPU", def: "Average Revenue Per User. Ingreso promedio por usuario/cliente." },
+    { term: "LGPD", def: "Lei Geral de Proteção de Dados. Ley de protección de datos de Brasil, equivalente al GDPR europeo." },
+    { term: "Gartner MQ", def: "Gartner Magic Quadrant. Reporte de analistas que posiciona vendors en Leaders, Challengers, Visionaries, Niche." },
+    { term: "Forrester Wave", def: "Reporte de Forrester que evalúa y rankea vendors de tecnología en una categoría específica." },
+    { term: "CERT / CSIRT", def: "Computer Emergency Response Team. Equipo nacional/organizacional de respuesta a incidentes de ciberseguridad." },
+  ]},
+  { cat: "Tecnología & Deployment", color: "#6C5CE7", terms: [
+    { term: "SaaS", def: "Software as a Service. Software entregado como servicio en la nube, modelo de suscripción." },
+    { term: "PaaS", def: "Platform as a Service. Plataforma en la nube donde el cliente despliega sus propias aplicaciones." },
+    { term: "On-premise", def: "Software instalado en la infraestructura propia del cliente. Requerido por gobiernos y bancos regulados." },
+    { term: "API / SDK", def: "Application Programming Interface / Software Development Kit. Herramientas para integrar servicios de terceros." },
+    { term: "NoCode", def: "Plataformas que permiten crear flujos y procesos sin escribir código. Identity Link de VU es NoCode." },
+    { term: "OT Security", def: "Operational Technology Security. Seguridad de sistemas industriales (SCADA, ICS). Relevante para minería/energía." },
+    { term: "SOC", def: "Security Operations Center. Centro de operaciones de seguridad que monitorea amenazas 24/7." },
+    { term: "MDR", def: "Managed Detection and Response. Servicio tercerizado de detección y respuesta a amenazas." },
+    { term: "SIEM", def: "Security Information and Event Management. Plataforma que agrega y analiza logs de seguridad en tiempo real." },
+    { term: "AI Agent Identity", def: "Capacidad de autenticar y gestionar identidades de agentes de IA que actúan en nombre de personas. Producto diferenciador de VU." },
+  ]},
+];
+
+const tabs = [
+  { id: "market", label: "Mercado" },
+  { id: "areas", label: "Áreas VU" },
+  { id: "countries", label: "Países" },
+  { id: "industries", label: "Industrias" },
+  { id: "obstacles", label: "Obstáculos" },
+  { id: "strategies", label: "Estrategias" },
+  { id: "glossary", label: "Glosario" },
+];
+
+function C({ children, style: s }) { return <div style={{ background: "#12122a", borderRadius: "10px", padding: "14px", ...s }}>{children}</div>; }
+function L({ children, color }) { return <div style={{ fontSize: "11px", color: color || "#8892b0", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "8px" }}>{children}</div>; }
+
+function Bar({ value, max, color, label }) {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "3px" }}>
+      <div style={{ width: "90px", fontSize: "10px", color: "#6a7a9a", textAlign: "right" }}>{label}</div>
+      <div style={{ flex: 1, height: "12px", background: "#0a0f1e", borderRadius: "4px", overflow: "hidden", maxWidth: "200px" }}>
+        <div style={{ width: `${(value / max) * 100}%`, height: "100%", background: color, borderRadius: "4px", opacity: 0.85 }} />
+      </div>
+      <span style={{ fontSize: "11px", color, fontWeight: 600, minWidth: "24px" }}>{value}</span>
+    </div>
+  );
+}
+
+function ScoreCircle({ value, label, color }) {
+  return (
+    <div style={{ textAlign: "center", minWidth: "55px" }}>
+      <div style={{ width: "40px", height: "40px", borderRadius: "50%", background: `conic-gradient(${color} ${value * 36}deg, #1a1a3a ${value * 36}deg)`, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 4px" }}>
+        <div style={{ width: "30px", height: "30px", borderRadius: "50%", background: "#12122a", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "12px", fontWeight: 700, color }}>{value}</div>
+      </div>
+      <div style={{ fontSize: "9px", color: "#6a7a9a", lineHeight: 1.2 }}>{label}</div>
+    </div>
+  );
+}
+
+function App() {
+  const [tab, setTab] = useState("market");
+  const [selCountry, setSelCountry] = useState(0);
+  const [selIndustry, setSelIndustry] = useState(0);
+  const [gSearch, setGSearch] = useState("");
+  const [gCat, setGCat] = useState("all");
+  const [gExpanded, setGExpanded] = useState(null);
+
+  return (
+    <div style={{ fontFamily: "'DM Sans', system-ui, sans-serif", background: "#080816", minHeight: "100vh", color: "#ccd6f6", padding: "16px" }}>
+      <div style={{ maxWidth: "920px", margin: "0 auto" }}>
+        {/* Header */}
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "4px" }}>
+          <div style={{ width: "28px", height: "28px", borderRadius: "6px", background: "#F15E37", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: "12px", color: "white" }}>VU</div>
+          <h1 style={{ fontSize: "18px", fontWeight: 700, color: "#e6f1ff", margin: 0 }}>Estudio de Ciberseguridad LATAM — Identity, Fraude & Autenticación</h1>
+        </div>
+        <p style={{ fontSize: "11px", color: "#4a5a7a", margin: "0 0 14px 0" }}>Mercado, países, industrias, presupuestos, obstáculos y estrategias para VU · Abril 2026</p>
+
+        {/* Tabs */}
+        <div style={{ display: "flex", gap: "3px", flexWrap: "wrap", marginBottom: "16px" }}>
+          {tabs.map(t => (
+            <button key={t.id} onClick={() => setTab(t.id)} style={{ padding: "6px 14px", borderRadius: "20px", border: tab === t.id ? "1px solid #F15E37" : "1px solid #1a1a3a", background: tab === t.id ? "#F15E3715" : "transparent", color: tab === t.id ? "#F15E37" : "#6a7a9a", cursor: "pointer", fontSize: "12px", fontWeight: tab === t.id ? 600 : 400 }}>{t.label}</button>
+          ))}
+        </div>
+
+        {/* ═══ MARKET TAB ═══ */}
+        {tab === "market" && (
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            <C>
+              <L color="#64ffda">Mercado de ciberseguridad en LATAM — 2025</L>
+              <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                {Object.values(marketOverview).map((m, i) => (
+                  <div key={i} style={{ background: "#0a0f1e", borderRadius: "8px", padding: "12px", flex: 1, minWidth: "140px", borderLeft: "3px solid #F15E37" }}>
+                    <div style={{ fontSize: "22px", fontWeight: 800, color: "#e6f1ff" }}>{m.value}</div>
+                    <div style={{ fontSize: "11px", color: "#8892b0", marginTop: "2px" }}>{m.label}</div>
+                    <div style={{ fontSize: "10px", color: "#64ffda", marginTop: "2px" }}>CAGR {m.cagr}</div>
+                    <div style={{ fontSize: "9px", color: "#3a4a6a", marginTop: "2px" }}>{m.source}</div>
+                  </div>
+                ))}
+              </div>
+            </C>
+            <C>
+              <L color="#F15E37">Distribución del gasto en ciberseguridad</L>
+              <div style={{ fontSize: "13px", color: "#a8b2d1", lineHeight: 1.8 }}>
+                El mercado de ciberseguridad en LATAM alcanza <strong style={{ color: "#e6f1ff" }}>$14.4B en 2025</strong> con un CAGR de 12.4%. De ese total, las áreas relevantes para VU representan aproximadamente <strong style={{ color: "#F15E37" }}>$3.57B</strong> (Identity Verification $720M + Fraud Detection $1.75B + IAM $1.1B). Esto equivale al <strong style={{ color: "#64ffda" }}>~25% del gasto total</strong> en ciberseguridad de la región.
+              </div>
+              <div style={{ marginTop: "12px" }}>
+                <div style={{ fontSize: "11px", color: "#6a7a9a", marginBottom: "4px" }}>Composición del gasto cyber LATAM (% estimado)</div>
+                {[
+                  { label: "Network Security", pct: 28, color: "#636E72" },
+                  { label: "Cloud Security", pct: 18, color: "#1A73E8" },
+                  { label: "Identity & Access", pct: 12, color: "#F15E37" },
+                  { label: "Fraud Prevention", pct: 13, color: "#00B894" },
+                  { label: "Endpoint", pct: 15, color: "#6C5CE7" },
+                  { label: "Otros", pct: 14, color: "#3a4a6a" },
+                ].map((s, i) => (
+                  <div key={i} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
+                    <div style={{ width: "100px", fontSize: "10px", color: "#8892b0", textAlign: "right" }}>{s.label}</div>
+                    <div style={{ flex: 1, height: "16px", background: "#0a0f1e", borderRadius: "4px", overflow: "hidden", maxWidth: "300px" }}>
+                      <div style={{ width: `${s.pct}%`, height: "100%", background: s.color, borderRadius: "4px", display: "flex", alignItems: "center", justifyContent: "flex-end", paddingRight: "4px" }}>
+                        <span style={{ fontSize: "9px", color: "white", fontWeight: 600 }}>{s.pct}%</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </C>
+            <C>
+              <L color="#64ffda">Presupuesto tipo de ciberseguridad</L>
+              <div style={{ fontSize: "12px", color: "#a8b2d1", lineHeight: 1.8 }}>
+                Las empresas en LATAM destinan entre <strong style={{ color: "#e6f1ff" }}>8-12% del presupuesto de IT a ciberseguridad</strong> (vs 12-15% en NA/EU). En industrias reguladas (banca, salud), sube a 10-15%. El gasto promedio global es de $2,700 USD por empleado. La distribución típica es: ~40% software/plataformas, ~30% personal, ~15% hardware, ~15% servicios tercerizados. El gasto en identity + fraud + auth representa ~25% del total de cyber, equivalente a <strong style={{ color: "#F15E37" }}>2-3% del presupuesto total de IT</strong>.
+              </div>
+            </C>
+          </div>
+        )}
+
+        {/* ═══ AREAS VU TAB ═══ */}
+        {tab === "areas" && (
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            <C style={{ borderLeft: "3px solid #F15E37" }}>
+              <L color="#F15E37">TAM de VU en LATAM — $3.57B combinado</L>
+              <div style={{ fontSize: "12px", color: "#a8b2d1", lineHeight: 1.7, marginBottom: "12px" }}>
+                VU compite en tres sub-mercados dentro de ciberseguridad. Juntos representan ~25% del gasto total. Es el segmento de mayor crecimiento (identity + fraud crecen 15-20% CAGR vs 12% del mercado general).
+              </div>
+              <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+                {[
+                  { area: "Identity Verification", size: "$720M", cagr: "~9%", pct: "20%", color: "#F15E37", products: "Onboarding Mgmt, Identity Link, KYC/OCR, Biometría", competitors: "Sumsub, Veriff, MetaMap, Jumio, Facephi" },
+                  { area: "Fraud Detection & Prevention", size: "$1.75B", cagr: "20.2%", pct: "49%", color: "#00B894", products: "Fraud Analysis (ML multichannel), Transaction monitoring, Deepfake detection", competitors: "ClearSale, Sumsub, Jumio, Experian, Featurespace" },
+                  { area: "Identity & Access Management", size: "$1.1B", cagr: "12.3%", pct: "31%", color: "#1A73E8", products: "CIAM, Authentication Mgmt (TOTP, biometría, Magic Link), MFA, SSO", competitors: "Auth0/Okta, Ping Identity, ForgeRock, Microsoft Entra" },
+                ].map((a, i) => (
+                  <div key={i} style={{ flex: 1, minWidth: "240px", background: "#0a0f1e", borderRadius: "10px", padding: "14px", borderTop: `3px solid ${a.color}` }}>
+                    <div style={{ fontSize: "11px", color: a.color, fontWeight: 700, marginBottom: "4px" }}>{a.area}</div>
+                    <div style={{ fontSize: "24px", fontWeight: 800, color: "#e6f1ff" }}>{a.size}</div>
+                    <div style={{ fontSize: "10px", color: "#64ffda" }}>CAGR {a.cagr} · {a.pct} del TAM VU</div>
+                    <div style={{ fontSize: "11px", color: "#8892b0", marginTop: "8px" }}><strong>Productos VU:</strong> {a.products}</div>
+                    <div style={{ fontSize: "10px", color: "#5a6a8a", marginTop: "4px" }}><strong>Competidores:</strong> {a.competitors}</div>
+                  </div>
+                ))}
+              </div>
+            </C>
+            <C>
+              <L color="#64ffda">Cuánto va a nuestras áreas del presupuesto total</L>
+              <div style={{ fontSize: "12px", color: "#a8b2d1", lineHeight: 1.8 }}>
+                De cada <strong style={{ color: "#e6f1ff" }}>$100 de IT budget</strong> en una empresa LATAM típica:
+                <br />$8-12 van a ciberseguridad total.
+                <br />De esos $8-12, aproximadamente <strong style={{ color: "#F15E37" }}>$2-3 van a identity, fraud y authentication</strong> combinados.
+                <br />En banca/fintech, sube a <strong style={{ color: "#F15E37" }}>$3-5</strong> por la presión regulatoria.
+                <br />En gobierno, el gasto en identity es proporcionalmente mayor (ID nacional, e-gov).
+                <br /><br />
+                <strong style={{ color: "#FDCB6E" }}>Tendencia clave:</strong> El mercado se mueve de security perimetral a <strong style={{ color: "#e6f1ff" }}>identity-first security</strong> y zero-trust. Esto beneficia directamente a VU: las áreas de identity + fraud + auth están ganando share dentro del presupuesto de cyber año a año.
+              </div>
+            </C>
+          </div>
+        )}
+
+        {/* ═══ COUNTRIES TAB ═══ */}
+        {tab === "countries" && (
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            <div style={{ display: "flex", gap: "4px", flexWrap: "wrap" }}>
+              {countries.map((c, i) => (
+                <button key={i} onClick={() => setSelCountry(i)} style={{ padding: "6px 12px", borderRadius: "8px", border: selCountry === i ? "1px solid #F15E37" : "1px solid #1a1a3a", background: selCountry === i ? "#F15E3715" : "transparent", color: selCountry === i ? "#F15E37" : "#8892b0", cursor: "pointer", fontSize: "12px", fontWeight: selCountry === i ? 600 : 400 }}>
+                  {c.flag} {c.name}
+                </button>
+              ))}
+            </div>
+            {(() => { const c = countries[selCountry]; return (
+              <>
+                <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                  {[
+                    { l: "Cyber total", v: c.cyberSize, sub: `${c.share} de LATAM` },
+                    { l: "Identity Verif.", v: c.idvSize },
+                    { l: "Fraud Det.", v: c.fraudSize },
+                    { l: "IAM", v: c.iamSize },
+                    { l: "CAGR", v: c.cagr },
+                    { l: "Digital pop.", v: c.digitalPop },
+                  ].map((m, i) => (
+                    <div key={i} style={{ background: "#12122a", borderRadius: "8px", padding: "10px", flex: 1, minWidth: "100px", borderLeft: "3px solid #F15E37" }}>
+                      <div style={{ fontSize: "10px", color: "#6a7a9a", textTransform: "uppercase" }}>{m.l}</div>
+                      <div style={{ fontSize: "18px", fontWeight: 700, color: "#e6f1ff" }}>{m.v}</div>
+                      {m.sub && <div style={{ fontSize: "10px", color: "#5a6a8a" }}>{m.sub}</div>}
+                    </div>
+                  ))}
+                </div>
+                <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+                  <C style={{ flex: 1, minWidth: "250px" }}>
+                    <L color="#F15E37">Regulación</L>
+                    <div style={{ color: "#ccd6f6", fontSize: "12px", lineHeight: 1.6 }}>{c.regulation}</div>
+                    <div style={{ marginTop: "8px" }}><L color="#8892b0">Madurez cyber</L>
+                      <div style={{ display: "flex", gap: "2px" }}>
+                        {[...Array(10)].map((_, i) => <div key={i} style={{ width: "20px", height: "8px", borderRadius: "2px", background: i < c.maturity ? "#F15E37" : "#1a1a3a" }} />)}
+                      </div>
+                      <div style={{ fontSize: "10px", color: "#6a7a9a", marginTop: "2px" }}>{c.maturity}/10</div>
+                    </div>
+                  </C>
+                  <C style={{ flex: 1, minWidth: "250px" }}>
+                    <L color="#00cc88">Key drivers</L>
+                    <div style={{ color: "#a8b2d1", fontSize: "12px", lineHeight: 1.6 }}>{c.keyDrivers}</div>
+                  </C>
+                </div>
+                <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+                  <C style={{ flex: 1, minWidth: "250px" }}>
+                    <L color="#ff6b6b">Obstáculos</L>
+                    <div style={{ color: "#a8b2d1", fontSize: "12px", lineHeight: 1.6 }}>{c.obstacles}</div>
+                  </C>
+                  <C style={{ flex: 1, minWidth: "250px", borderLeft: "3px solid #F15E37" }}>
+                    <L color="#F15E37">Oportunidad para VU</L>
+                    <div style={{ color: "#ccd6f6", fontSize: "12px", lineHeight: 1.6 }}>{c.vuOpportunity}</div>
+                  </C>
+                </div>
+              </>
+            );})()}
+          </div>
+        )}
+
+        {/* ═══ INDUSTRIES TAB ═══ */}
+        {tab === "industries" && (
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            <div style={{ display: "flex", gap: "4px", flexWrap: "wrap" }}>
+              {industries.map((ind, i) => (
+                <button key={i} onClick={() => setSelIndustry(i)} style={{ padding: "5px 10px", borderRadius: "8px", border: selIndustry === i ? "1px solid #F15E37" : "1px solid #1a1a3a", background: selIndustry === i ? "#F15E3715" : "transparent", color: selIndustry === i ? "#F15E37" : "#8892b0", cursor: "pointer", fontSize: "11px", fontWeight: selIndustry === i ? 600 : 400 }}>
+                  {ind.icon} {ind.name}
+                </button>
+              ))}
+            </div>
+            {(() => { const ind = industries[selIndustry]; return (
+              <>
+                <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                  {[
+                    { l: "Gasto cyber", v: ind.cyberSpend },
+                    { l: "% del total LATAM", v: ind.cyberShare },
+                    { l: "Budget (% IT)", v: ind.budget },
+                    { l: "CAGR", v: ind.growth },
+                  ].map((m, i) => (
+                    <div key={i} style={{ background: "#12122a", borderRadius: "8px", padding: "10px", flex: 1, minWidth: "110px", borderLeft: "3px solid #F15E37" }}>
+                      <div style={{ fontSize: "10px", color: "#6a7a9a", textTransform: "uppercase" }}>{m.l}</div>
+                      <div style={{ fontSize: "18px", fontWeight: 700, color: "#e6f1ff" }}>{m.v}</div>
+                    </div>
+                  ))}
+                </div>
+                <C>
+                  <L color="#8892b0">Necesidad por área VU (1-10)</L>
+                  <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
+                    <ScoreCircle value={ind.idvNeed} label="Identity" color="#F15E37" />
+                    <ScoreCircle value={ind.fraudNeed} label="Fraud" color="#00B894" />
+                    <ScoreCircle value={ind.authNeed} label="Auth" color="#1A73E8" />
+                  </div>
+                </C>
+                <C><L color="#00cc88">Drivers de gasto</L><div style={{ color: "#a8b2d1", fontSize: "12px", lineHeight: 1.7 }}>{ind.drivers}</div></C>
+                <C style={{ borderLeft: "3px solid #F15E37" }}><L color="#F15E37">Fit con VU</L><div style={{ color: "#ccd6f6", fontSize: "12px", lineHeight: 1.7 }}>{ind.vuFit}</div></C>
+                <C><L color="#ff6b6b">Obstáculos de venta</L><div style={{ color: "#a8b2d1", fontSize: "12px", lineHeight: 1.7 }}>{ind.obstacles}</div></C>
+              </>
+            );})()}
+            {/* Industry heatmap */}
+            <C>
+              <L color="#64ffda">Heatmap — Todas las industrias vs áreas VU</L>
+              <div style={{ overflowX: "auto" }}>
+                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "11px" }}>
+                  <thead><tr>
+                    <th style={{ textAlign: "left", padding: "6px", color: "#6a7a9a", borderBottom: "1px solid #1a1a3a" }}>Industria</th>
+                    <th style={{ padding: "6px", color: "#F15E37", borderBottom: "1px solid #1a1a3a" }}>IDV</th>
+                    <th style={{ padding: "6px", color: "#00B894", borderBottom: "1px solid #1a1a3a" }}>Fraud</th>
+                    <th style={{ padding: "6px", color: "#1A73E8", borderBottom: "1px solid #1a1a3a" }}>Auth</th>
+                    <th style={{ padding: "6px", color: "#8892b0", borderBottom: "1px solid #1a1a3a" }}>Gasto</th>
+                    <th style={{ padding: "6px", color: "#8892b0", borderBottom: "1px solid #1a1a3a" }}>CAGR</th>
+                  </tr></thead>
+                  <tbody>{industries.map((ind, i) => {
+                    const heatColor = (v) => v >= 9 ? "#00cc8860" : v >= 7 ? "#F15E3740" : v >= 5 ? "#FDCB6E30" : "#1a1a3a";
+                    return (
+                      <tr key={i} style={{ borderBottom: "1px solid #0a0f1e" }}>
+                        <td style={{ padding: "6px", color: "#ccd6f6" }}>{ind.icon} {ind.name}</td>
+                        <td style={{ padding: "6px", textAlign: "center", background: heatColor(ind.idvNeed), color: "#e6f1ff", fontWeight: 600 }}>{ind.idvNeed}</td>
+                        <td style={{ padding: "6px", textAlign: "center", background: heatColor(ind.fraudNeed), color: "#e6f1ff", fontWeight: 600 }}>{ind.fraudNeed}</td>
+                        <td style={{ padding: "6px", textAlign: "center", background: heatColor(ind.authNeed), color: "#e6f1ff", fontWeight: 600 }}>{ind.authNeed}</td>
+                        <td style={{ padding: "6px", textAlign: "center", color: "#a8b2d1" }}>{ind.cyberSpend}</td>
+                        <td style={{ padding: "6px", textAlign: "center", color: "#64ffda" }}>{ind.growth}</td>
+                      </tr>
+                    );
+                  })}</tbody>
+                </table>
+              </div>
+              <div style={{ fontSize: "10px", color: "#4a5a7a", marginTop: "6px" }}>
+                Verde oscuro = necesidad alta (9-10) · Naranja = media-alta (7-8) · Amarillo = media (5-6) · Gris = baja (&lt;5)
+              </div>
+            </C>
+          </div>
+        )}
+
+        {/* ═══ OBSTACLES TAB ═══ */}
+        {tab === "obstacles" && (
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            {obstacles.map((o, i) => (
+              <C key={i}>
+                <L color={["#ff6b6b", "#FDCB6E", "#6C5CE7", "#E84393"][i]}>{o.category}</L>
+                {o.items.map((item, j) => (
+                  <div key={j} style={{ color: "#a8b2d1", fontSize: "12px", marginBottom: "6px", paddingLeft: "10px", borderLeft: `2px solid ${["#ff6b6b", "#FDCB6E", "#6C5CE7", "#E84393"][i]}30` }}>{item}</div>
+                ))}
+              </C>
+            ))}
+            <C style={{ borderLeft: "3px solid #F15E37" }}>
+              <L color="#F15E37">Resumen — Peso de los obstáculos</L>
+              <div style={{ fontSize: "12px", color: "#a8b2d1", lineHeight: 1.8 }}>
+                El obstáculo #1 es <strong style={{ color: "#ff6b6b" }}>presupuesto</strong>: LATAM gasta 30-40% menos que NA/EU en ciberseguridad por empleado. El #2 es <strong style={{ color: "#FDCB6E" }}>talento</strong>: el déficit de 750K profesionales solo en Brasil genera dependencia de vendors y managed services. El #3 es <strong style={{ color: "#6C5CE7" }}>madurez</strong>: muchas empresas aún están en passwords + firewall. La buena noticia para VU: estos obstáculos favorecen plataformas all-in-one como VU ONE que reducen complejidad, y servicios managed/NoCode como Identity Link que no requieren equipos internos grandes.
+              </div>
+            </C>
+          </div>
+        )}
+
+        {/* ═══ STRATEGIES TAB ═══ */}
+        {tab === "strategies" && (
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            {strategies.map((s, i) => (
+              <C key={i} style={{ borderLeft: `3px solid ${s.color}` }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
+                  <L color={s.color}>{s.title}</L>
+                  <span style={{ fontSize: "10px", padding: "2px 8px", borderRadius: "10px", background: s.color + "20", color: s.color, fontWeight: 600 }}>{s.priority}</span>
+                </div>
+                <div style={{ color: "#ccd6f6", fontSize: "12px", lineHeight: 1.7 }}>{s.desc}</div>
+              </C>
+            ))}
+          </div>
+        )}
+
+        {/* ═══ GLOSSARY TAB ═══ */}
+        {tab === "glossary" && (() => {
+          const q = gSearch.toLowerCase();
+          const filtered = glossary
+            .filter(cat => gCat === "all" || cat.cat === gCat)
+            .map(cat => ({
+              ...cat,
+              terms: cat.terms.filter(t => !q || t.term.toLowerCase().includes(q) || t.def.toLowerCase().includes(q))
+            }))
+            .filter(cat => cat.terms.length > 0);
+          const totalTerms = filtered.reduce((sum, cat) => sum + cat.terms.length, 0);
+          return (
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            {/* Search bar */}
+            <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap" }}>
+              <div style={{ flex: 1, minWidth: "200px", position: "relative" }}>
+                <input
+                  type="text"
+                  placeholder="Buscar término o concepto..."
+                  value={gSearch}
+                  onChange={e => setGSearch(e.target.value)}
+                  style={{ width: "100%", padding: "10px 14px 10px 36px", borderRadius: "10px", border: "1px solid #1a1a3a", background: "#12122a", color: "#e6f1ff", fontSize: "13px", outline: "none" }}
+                  onFocus={e => e.target.style.borderColor = "#F15E37"}
+                  onBlur={e => e.target.style.borderColor = "#1a1a3a"}
+                />
+                <span style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "#4a5a7a", fontSize: "14px" }}>&#128269;</span>
+              </div>
+              <div style={{ fontSize: "11px", color: "#4a5a7a" }}>{totalTerms} términos</div>
+            </div>
+
+            {/* Category filters */}
+            <div style={{ display: "flex", gap: "4px", flexWrap: "wrap" }}>
+              <button onClick={() => setGCat("all")} style={{ padding: "5px 12px", borderRadius: "14px", border: gCat === "all" ? "1px solid #F15E37" : "1px solid #1a1a3a", background: gCat === "all" ? "#F15E3715" : "transparent", color: gCat === "all" ? "#F15E37" : "#6a7a9a", cursor: "pointer", fontSize: "11px", fontWeight: gCat === "all" ? 600 : 400 }}>Todas</button>
+              {glossary.map((cat, i) => (
+                <button key={i} onClick={() => setGCat(gCat === cat.cat ? "all" : cat.cat)} style={{ padding: "5px 12px", borderRadius: "14px", border: gCat === cat.cat ? `1px solid ${cat.color}` : "1px solid #1a1a3a", background: gCat === cat.cat ? cat.color + "15" : "transparent", color: gCat === cat.cat ? cat.color : "#6a7a9a", cursor: "pointer", fontSize: "11px", fontWeight: gCat === cat.cat ? 600 : 400 }}>
+                  {cat.cat.split(" ")[0]}
+                </button>
+              ))}
+            </div>
+
+            {/* Terms */}
+            {filtered.length === 0 ? (
+              <C style={{ textAlign: "center", padding: "30px" }}>
+                <div style={{ fontSize: "14px", color: "#4a5a7a" }}>No se encontraron términos para "{gSearch}"</div>
+              </C>
+            ) : filtered.map((cat, ci) => (
+              <C key={ci}>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "10px" }}>
+                  <div style={{ width: "4px", height: "16px", borderRadius: "2px", background: cat.color }} />
+                  <L color={cat.color} style={{ margin: 0 }}>{cat.cat}</L>
+                  <span style={{ fontSize: "10px", color: "#4a5a7a", background: "#0a0f1e", padding: "2px 8px", borderRadius: "10px" }}>{cat.terms.length}</span>
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                  {cat.terms.map((t, ti) => {
+                    const key = cat.cat + "-" + ti;
+                    const isOpen = gExpanded === key;
+                    const highlight = (text) => {
+                      if (!q) return text;
+                      const idx = text.toLowerCase().indexOf(q);
+                      if (idx === -1) return text;
+                      return (<>{text.slice(0, idx)}<mark style={{ background: "#F15E3740", color: "#e6f1ff", padding: "0 2px", borderRadius: "2px" }}>{text.slice(idx, idx + q.length)}</mark>{text.slice(idx + q.length)}</>);
+                    };
+                    return (
+                      <div key={ti}
+                        onClick={() => setGExpanded(isOpen ? null : key)}
+                        style={{ padding: "10px 12px", borderRadius: "8px", background: isOpen ? "#0a0f1e" : ti % 2 === 0 ? "#0d1220" : "transparent", cursor: "pointer", transition: "all 0.15s", borderLeft: isOpen ? `3px solid ${cat.color}` : "3px solid transparent" }}
+                        onMouseEnter={e => { if (!isOpen) e.currentTarget.style.background = "#0d1220"; }}
+                        onMouseLeave={e => { if (!isOpen) e.currentTarget.style.background = ti % 2 === 0 ? "#0d1220" : "transparent"; }}
+                      >
+                        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                          <span style={{ fontSize: "10px", color: "#4a5a7a", transition: "transform 0.15s", transform: isOpen ? "rotate(90deg)" : "rotate(0deg)" }}>&#9654;</span>
+                          <span style={{ fontSize: "13px", fontWeight: 700, color: isOpen ? cat.color : "#e6f1ff" }}>{highlight(t.term)}</span>
+                          {!isOpen && <span style={{ fontSize: "11px", color: "#4a5a7a", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", flex: 1 }}>{t.def.slice(0, 60)}...</span>}
+                        </div>
+                        {isOpen && (
+                          <div style={{ marginTop: "8px", marginLeft: "22px", fontSize: "13px", color: "#ccd6f6", lineHeight: 1.7 }}>
+                            {highlight(t.def)}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </C>
+            ))}
+
+            <C style={{ background: "#0a0f1e", border: "1px dashed #1a1a3a" }}>
+              <div style={{ fontSize: "11px", color: "#4a5a7a", lineHeight: 1.7 }}>
+                <strong style={{ color: "#6a7a9a" }}>Tip:</strong> Usá el buscador para encontrar cualquier término. Hacé click en un término para expandir su definición completa. Filtrá por categoría con los botones de arriba.
+              </div>
+            </C>
+          </div>
+          );
+        })()}
+
+        {/* Footer */}
+        <div style={{ marginTop: "24px", padding: "14px", background: "#F15E3710", borderRadius: "10px", borderLeft: "3px solid #F15E37" }}>
+          <L color="#F15E37">Conclusión</L>
+          <div style={{ fontSize: "12px", color: "#a8b2d1", lineHeight: 1.7 }}>
+            El mercado de ciberseguridad en LATAM crece a $14.4B en 2025 con CAGR 12.4%. Las áreas de VU (identity + fraud + auth) representan ~$3.57B y crecen más rápido que el promedio (15-20% CAGR). Brasil concentra el 49% del mercado, seguido por México (19%) y Argentina (8%). BFSI es la vertical líder con 26% del gasto. La oportunidad más urgente es iGaming Brasil, la más estratégica es escalar el modelo RENAPER, y la más diferenciadora es AI Agent Identity. El gap principal de VU sigue siendo brand awareness y content marketing vs competidores con 5-10x más presupuesto.
+          </div>
+        </div>
+
+        <div style={{ textAlign: "center", marginTop: "14px", fontSize: "10px", color: "#2a2a4a" }}>
+          Fuentes: Grand View Research, Mordor Intelligence, MarketsandMarkets, Market Data Forecast, IMARC Group, Emergen Research, Fortune BI, Gartner, Forrester, Kaspersky, SonicWall, OAS · Abril 2026
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
